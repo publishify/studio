@@ -1,0 +1,19 @@
+{
+  "name": "publishify-web",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "../../apps/web/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/k/*"]
+  },
+  "routes": [{ "pattern": "publishify.app", "custom_domain": true }],
+  "d1_databases": [
+    { "binding": "DB", "database_name": "publishify", "database_id": "f53a798c-8fa7-4544-b1f1-7b7245e72183", "migrations_dir": "migrations" }
+  ],
+  "durable_objects": { "bindings": [{ "name": "BOOKS", "class_name": "BookDO" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["BookDO"] }],
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@publishify/api",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "deploy": "pnpm --filter @publishify/web build && pnpm --filter @publishify/site build && wrangler deploy",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@simplewebauthn/server": "^14.0.3",
+    "hono": "^4.13.16",
+    "marked": "^18.1.3",
+    "valibot": "^1.5.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261104.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.158.0"
+  }
+}

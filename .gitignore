@@ -1,0 +1,28 @@
+# Yayımlanmamış metin ve raporlar — ASLA commit etme
+el-yazmasi/*
+!el-yazmasi/README.md
+raporlar/*
+!raporlar/README.md
+
+# Bağımlılıklar ve derleme çıktıları
+node_modules/
+dist/
+build/
+.turbo/
+.wrangler/
+.vite/
+target/
+*.wasm
+!crates/**/fixtures/*.wasm
+
+# Ortam ve sırlar
+.env
+.env.*
+!.env.example
+.dev.vars
+*.pem
+
+# Sistem
+.DS_Store
+Thumbs.db
+*.log

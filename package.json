@@ -1,0 +1,15 @@
+{
+  "name": "publishify",
+  "private": true,
+  "license": "MIT",
+  "description": "A calm, open-source writing studio for writers of all kinds.",
+  "homepage": "https://publishify.app",
+  "packageManager": "pnpm@12.18.0",
+  "scripts": {
+    "dev": "pnpm --filter @publishify/web dev",
+    "build": "pnpm --filter @publishify/web build && pnpm --filter @publishify/site build",
+    "deploy": "pnpm --filter @publishify/api deploy",
+    "dev:api": "pnpm --filter @publishify/api dev",
+    "test": "pnpm --filter @publishify/web test && pnpm --filter @publishify/api test"
+  }
+}

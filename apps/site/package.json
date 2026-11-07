@@ -1,0 +1,10 @@
+{
+  "name": "@publishify/site",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.mjs",
+    "check": "node src/check.mjs"
+  }
+}
