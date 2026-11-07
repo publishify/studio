@@ -1,32 +1,47 @@
-# Contributing to Publishify Studio
+# Contributing to Publishify
 
-Thanks for helping writers write. A few ground rules keep the project calm and focused.
+Thank you for helping writers. Publishify is a small project with a few firm principles, and this page explains how to work with them.
 
-## Before you start
-- Open an issue to discuss larger changes before writing code.
-- Keep the editor **calm**: new features should earn their place. We prefer a few good tools to many options.
-- The editor must **never rewrite a writer's text** and must keep working with plain Markdown files.
+## Principles
 
-## Setup
+1. **The author's text is sacred.** No change may silently overwrite, reformat or "fix" a writer's words. When two versions conflict, keep both.
+2. **Plain files.** Chapters are plain Markdown. Do not introduce formats that lock writers in.
+3. **Fast and calm.** The editor must stay responsive on a 200,000-word book. The initial JavaScript budget is about 100 KB gzip.
+4. **Every script.** Test right-to-left (Arabic, Ottoman Turkish) as well as left-to-right. Use CSS logical properties (`margin-inline-start`, not `margin-left`).
+5. **Only true claims.** Docs and the website describe what the code does today. Anything still to come is labelled as planned.
+
+## Ways to help
+
+- **Translations.** The interface strings live in `apps/web/src/i18n*.ts`. Native-speaker reviews of the existing Arabic, Ottoman Turkish and Japanese strings are especially valuable.
+- **English comments.** Many code comments are in Turkish. Translating them is a great first pull request.
+- **Tests.** The sync and conflict logic in `workers/api` would benefit most.
+- **Bugs.** Open an issue with steps to reproduce, your browser and your OS. Never paste your unpublished manuscript into an issue; a short sample is enough.
+
+## Development setup
+
 ```bash
+corepack enable
 pnpm install
-pnpm dev        # editor at http://localhost:5173/studio/
-pnpm dev:api    # API (Cloudflare Workers, local)
-pnpm test
+pnpm dev        # Studio at http://localhost:5173/studio/
+pnpm test       # unit tests
+pnpm build      # type-check and build
 ```
-A recent Node.js and pnpm are required.
+
+See the [README](README.md#getting-started) for running the full stack with the Worker locally.
 
 ## Pull requests
-- Run `pnpm test` and a type check (`pnpm exec tsc --noEmit` inside the package you changed) before opening a PR.
-- Add tests for logic changes, especially sync, conflicts, export and publishing: they protect writers' text.
-- Right-to-left languages are first-class. If you touch layout, use CSS logical properties (`inline-start`, `margin-inline`, …) and check an Arabic book.
-- User-facing strings live in `apps/web/src/i18n*.ts`. Missing translations fall back to English.
-- Significant technical decisions are recorded as short ADRs in `docs/adr/`.
 
-## Translations
-Interface translations (Arabic, Ottoman Turkish, German, French, Russian, Japanese) were drafted without native review. Corrections from native speakers are especially welcome.
+- Keep each PR focused on one change. Explain *why* the change is needed, not only *what* it does.
+- Run `pnpm build` and `pnpm test` before you push. Both must pass.
+- TypeScript is strict. Avoid `any` and avoid non-null assertions unless you can explain them.
+- Add or update tests for any behaviour you change.
+- For UI changes, include before and after screenshots in light, dark and right-to-left.
+- Significant design decisions are recorded as short Architecture Decision Records. If your change makes one, describe it in the PR and we will add it.
 
 ## Code of conduct
-Be kind and respectful. Harassment of any kind is not tolerated.
 
-By contributing you agree that your contributions are licensed under the [MIT License](LICENSE).
+Be kind, be patient, and assume good faith. Harassment, discrimination or personal attacks are not tolerated in issues, pull requests or any other project space. Maintainers may remove content and block participants who break these expectations.
+
+## License
+
+By contributing, you agree that your contributions are licensed under the [MIT License](LICENSE).
