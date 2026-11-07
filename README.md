@@ -41,7 +41,7 @@ Most writing tools make you choose: a minimal editor that cannot hold a book, or
 
 ### Keep
 - **Local first.** Everything is saved to your device (IndexedDB) about 0.4 seconds after you type. No account needed to start.
-- **Google Drive sync (early access):** one Markdown file per chapter, a `book.json`, conflict copies instead of lost text, deleted items go to Drive's trash. Uses the narrow `drive.file` scope.
+- **Google Drive sync (early access):** one Markdown file per chapter, a `kitap.json`, conflict copies instead of lost text, deleted items go to Drive's trash. Uses the narrow `drive.file` scope.
 - **Passkey accounts and cross-device sync** with per-chapter revisions; on conflict, both versions are kept.
 
 ### Publish and export
