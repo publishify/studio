@@ -13,7 +13,7 @@ Thank you for helping writers. Publishify is a small project with a few firm pri
 ## Ways to help
 
 - **Translations.** The interface strings live in `apps/web/src/i18n*.ts`. Native-speaker reviews of the existing Arabic, Ottoman Turkish and Japanese strings are especially valuable.
-- **English comments.** Many code comments are in Turkish. Translating them is a great first pull request.
+- **Writing in English.** Code comments, commit messages, tests and documentation are in English.
 - **Tests.** The sync and conflict logic in `workers/api` would benefit most.
 - **Bugs.** Open an issue with steps to reproduce, your browser and your OS. Never paste your unpublished manuscript into an issue; a short sample is enough.
 

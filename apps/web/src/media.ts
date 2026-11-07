@@ -1,4 +1,4 @@
-// Kapak ve seslendirme dosyaları: büyük olduğu için kitaplık kaydına değil, ayrı IndexedDB girdilerine yazılır.
+// Cover and narration files: because they are large, they are written to separate IndexedDB entries, not to the library record.
 import { del, get, set } from "idb-keyval";
 import { useEffect, useState } from "react";
 
@@ -7,9 +7,9 @@ export interface MediaRef {
   name: string;
   type: string;
   size: number;
-  /** Drive'daki dosya bağı. */
+  /** File link on Drive. */
   drive?: { fileId: string; version: string };
-  /** Yeni/değişmiş: Drive'a yüklenmeyi bekliyor. */
+  /** New/changed: waiting to be uploaded to Drive. */
   up?: boolean;
 }
 
@@ -20,7 +20,7 @@ export const getBlob = (id: string) => get<Blob>(key(id));
 export const delBlob = (id: string) => del(key(id)).catch(() => undefined);
 export const newRef = (blob: Blob, name: string, extra: Partial<MediaRef> = {}): MediaRef => ({ id: crypto.randomUUID(), name, type: blob.type || "application/octet-stream", size: blob.size, ...extra });
 
-/** Kapak: çok büyükse küçültüp JPEG'e çevirir (kitaplık ve e-kitap için yeterli). */
+/** Cover: if very large, shrinks it and converts to JPEG (enough for the library and the e-book). */
 export async function prepareCover(file: File): Promise<Blob> {
   try {
     const bmp = await createImageBitmap(file);
@@ -36,7 +36,7 @@ export async function prepareCover(file: File): Promise<Blob> {
   }
 }
 
-/** Yerelde saklanan dosyanın geçici adresi; yoksa null (Drive'dan henüz indirilmemiş). */
+/** Temporary address of the locally stored file; null if absent (not yet downloaded from Drive). */
 export function useBlobUrl(ref: MediaRef | undefined, reload = 0): { url: string | null; loading: boolean } {
   const [state, setState] = useState<{ url: string | null; loading: boolean }>({ url: null, loading: !!ref });
   useEffect(() => {

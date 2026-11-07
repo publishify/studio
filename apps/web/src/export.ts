@@ -16,18 +16,18 @@ function download(name: string, data: BlobPart | Uint8Array, type: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** Kısımlar `# ` başlığı olur; bölüm başlıkları bir seviye aşağı iner. */
+/** Parts become `# ` headings; chapter headings move one level down. */
 function sections(book: Book): { part: boolean; md: string; title: string }[] {
   const out: { part: boolean; md: string; title: string }[] = [];
   const first = (body: string) => body.split("\n").find((l) => l.trim())?.replace(/^#+\s*/, "") ?? "";
-  let scenes = 0; // geçerli bölüme katılan sahne sayısı
-  let onlyHeading = false; // bölümün kendi metni yalnızca başlık mı
+  let scenes = 0; // number of scenes joined to the current chapter
+  let onlyHeading = false; // whether the chapter's own text is only a heading
   for (const i of book.items) {
     if (i.trashed) continue;
     if (i.kind === "part") { out.push({ part: true, title: i.title, md: `# ${i.title}` }); scenes = 0; continue; }
     const last = out[out.length - 1];
     if (i.level === 2 && last && !last.part) {
-      // Sahne, bölümün içine girer. Sahneler arası ayırıcı "* * *"; bölüm yalnızca başlıksa ilk sahneden önce konmaz.
+      // A scene goes inside the chapter. Scenes are separated by "* * *"; if the chapter is only a heading, no separator is placed before the first scene.
       const sep = scenes === 0 && onlyHeading ? "" : "* * *\n\n";
       last.md = `${last.md.trimEnd()}\n\n${sep}${i.body.trim()}`;
       scenes++;
@@ -41,10 +41,10 @@ function sections(book: Book): { part: boolean; md: string; title: string }[] {
   return out;
 }
 
-/** Kitabın yazı dili (tanımsızsa Türkçe). */
+/** The book's writing language (Turkish if undefined). */
 const bl = (book: Book): BookLang => bookLangOf(book, "tr");
 
-/** Yayın için bölümler: kısım etiketi + başlık + Markdown gövdesi (sahneler bölüme katılır, çöptekiler yok). */
+/** Chapters for publishing: part label + title + Markdown body (scenes are merged into the chapter, trashed items excluded). */
 export function publishChapters(book: Book): { part: string; title: string; body: string }[] {
   const out: { part: string; title: string; body: string }[] = [];
   let part = "";
@@ -107,7 +107,7 @@ function runs(text: string, rtl = false): string {
 function docx(book: Book): Uint8Array {
   const paras: string[] = [];
   const rtl = isRtl(bl(book));
-  // OOXML sırası: pStyle, pageBreakBefore, bidi, ind
+  // OOXML order: pStyle, pageBreakBefore, bidi, ind
   const p = (text: string, style?: string, opts: { pb?: boolean; ind?: boolean } = {}) =>
     paras.push(`<w:p><w:pPr>${style ? `<w:pStyle w:val="${style}"/>` : ""}${opts.pb ? "<w:pageBreakBefore/>" : ""}${rtl ? "<w:bidi/>" : ""}${opts.ind ? '<w:ind w:left="720"/>' : ""}</w:pPr>${runs(text, rtl)}</w:p>`);
   p(book.title, "Title");
@@ -143,7 +143,7 @@ function docx(book: Book): Uint8Array {
 const xhtml = (title: string, body: string, lang: BookLang = "tr") =>
   `<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="${htmlLang(lang)}" xml:lang="${htmlLang(lang)}" dir="${isRtl(lang) ? "rtl" : "ltr"}"><head><meta charset="utf-8"/><title>${esc(title)}</title><link rel="stylesheet" href="style.css"/></head><body>${body}</body></html>`;
 
-/** E-kitap okuyucuları jpeg ve png'yi garanti okur; başka biçimleri JPEG'e çevirir. */
+/** E-book readers are guaranteed to read JPEG and PNG; other formats are converted to JPEG. */
 async function coverImage(book: Book): Promise<{ ext: "jpg" | "png"; type: string; data: Uint8Array } | null> {
   const raw = book.cover ? await getBlob(book.cover.id) : undefined;
   if (!raw) return null;

@@ -2,7 +2,7 @@ import { syntaxTree } from "@codemirror/language";
 import { type Range } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate, WidgetType } from "@codemirror/view";
 
-/** İmleç dışındaki Markdown işaretlerini gizler (Obsidian tarzı canlı önizleme). */
+/** Hides Markdown marks away from the cursor (Obsidian-style live preview). */
 const HIDDEN = new Set(["HeaderMark", "EmphasisMark", "QuoteMark", "CodeMark", "LinkMark", "URL", "StrikethroughMark"]);
 const hide = Decoration.replace({});
 
@@ -72,7 +72,7 @@ function build(view: EditorView): DecorationSet {
         }
         if (!HIDDEN.has(node.name) || active.has(line.number)) return;
         let end = node.to;
-        // "# " ve "> " işaretinden sonraki boşluğu da gizle
+        // also hide the space after the "# " and "> " marks
         if ((node.name === "HeaderMark" || node.name === "QuoteMark") && state.sliceDoc(end, end + 1) === " ") end += 1;
         if (end > node.from) decos.push(hide.range(node.from, end));
       },

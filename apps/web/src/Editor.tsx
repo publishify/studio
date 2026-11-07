@@ -33,7 +33,7 @@ const mdStyle = HighlightStyle.define([
 const focusSlot = new Compartment();
 const typeSlot = new Compartment();
 const langSlot = new Compartment();
-/** Yazı dili: yön (RTL), yazım denetimi dili; satır başına yön de otomatik (karışık metin için). */
+/** Writing language: direction (RTL) and spell-check language; direction is also set per line (for mixed text). */
 const langExt = (l: BookLang) => [
   EditorView.contentAttributes.of({ spellcheck: "true", lang: htmlLang(l), dir: isRtl(l) ? "rtl" : "ltr", autocapitalize: "sentences" }),
   EditorView.perLineTextDirection.of(true),
@@ -96,7 +96,7 @@ export default function Editor({ docId, value, focus, typewriter: tw, onChange, 
     view.current?.dispatch({ effects: langSlot.reconfigure(langExt(bookLang)) });
   }, [bookLang]);
 
-  // Metnin altındaki boş alana tıklamak imleci sona koyar (yazı alanı tüm sayfa gibi davranır).
+  // Clicking the empty area below the text puts the cursor at the end (the writing area behaves like the whole page).
   const onMouseDown = (e: React.MouseEvent) => {
     const v = view.current;
     if (!v || v.contentDOM.contains(e.target as Node)) return;

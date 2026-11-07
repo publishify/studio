@@ -1,6 +1,6 @@
 import type { EditorView } from "@codemirror/view";
 
-/** Seçimi (ya da imlecin altındaki sözcüğü) işaretle sarar / sarmayı kaldırır. */
+/** Wraps the selection (or the word under the cursor) in a marker, or removes the wrapping. */
 export function toggleWrap(view: EditorView, mark: string): boolean {
   const { state } = view;
   const r = state.selection.main;
@@ -22,7 +22,7 @@ export function toggleWrap(view: EditorView, mark: string): boolean {
   return true;
 }
 
-/** Satır başı önekini (başlık, alıntı, liste) açar/kapatır; başlıkta aynı seviyeye basınca kaldırır. */
+/** Toggles a line-start prefix (heading, quote, list); pressing the same level on a heading removes it. */
 export function toggleLinePrefix(view: EditorView, prefix: string): boolean {
   const { state } = view;
   const line = state.doc.lineAt(state.selection.main.head);

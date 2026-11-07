@@ -248,7 +248,7 @@ workers/
 | `pnpm test` | Unit tests (Vitest) for Studio and the API |
 | `pnpm --filter @publishify/site check` | Broken-link and SEO checks for the site |
 
-Most code comments are currently written in **Turkish**, because Publishify began as a tool for Turkish authors. English translations of comments are a welcome first contribution.
+Code comments, tests, scripts and architecture decision records are written in **English**. Product text (the interface and the marketing site) is available in several languages.
 
 ## Self-hosting
 
@@ -285,7 +285,7 @@ The free Cloudflare plan is enough for personal use.
 
 ## Contributing
 
-Bug reports, translations, documentation and code are all welcome. Please read **[CONTRIBUTING.md](CONTRIBUTING.md)** first. Good first steps include translating the interface into your language, translating code comments into English, and adding tests.
+Bug reports, translations, documentation and code are all welcome. Please read **[CONTRIBUTING.md](CONTRIBUTING.md)** first. Good first steps include translating the interface into your language, reviewing existing translations, and adding tests.
 
 ## Security
 

@@ -1,5 +1,5 @@
--- Yayınla (CMS): yazarın herkese açtığı kitaplar. Taslak metin burada değil, kitap Durable Object'inde kalır;
--- yayın bir kopyadır ve yazar "Yayınla/Güncelle" dedikçe değişir.
+-- Publish (CMS): books the author makes public. The draft text is not here; it stays in the book's Durable Object;
+-- a publication is a copy and changes whenever the author presses "Publish/Update".
 CREATE TABLE published_books (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

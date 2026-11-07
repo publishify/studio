@@ -12,33 +12,33 @@ export interface Version { t: number; body: string; label?: string }
 export interface Item {
   id: string;
   kind: "part" | "chapter";
-  title: string; // kısım adı; bölümlerde "__conflict__" = çakışan kopya işareti, aksi halde boş
+  title: string; // section name; for chapters "__conflict__" = conflicted-copy marker, otherwise empty
   body: string;
   updated: number;
   versions: Version[];
-  /** Sunucudaki son bilinen sıra numarası; tanımsızsa hiç eşitlenmedi. */
+  /** Last known sequence number on the server; undefined means never synced. */
   seq?: number;
   dirty?: boolean;
-  /** Google Drive'daki dosya bağı (yalnızca Drive bağlıysa). */
+  /** File link on Google Drive (only if Drive is connected). */
   drive?: DriveLink;
-  /** Çöp kutusuna atıldığı an; tanımlıysa bölüm gizlenir ama silinmez (kullanıcı "boşalt" diyene kadar). */
+  /** The moment it was moved to the trash; if defined, the chapter is hidden but not deleted (until the user says "empty"). */
   trashed?: number;
-  /** 2 = sahne (bir bölümün altında); tanımsız = bölüm. Sahne de bir belgedir (kind "chapter"). */
+  /** 2 = scene (under a chapter); undefined = chapter. A scene is also a document (kind "chapter"). */
   level?: 2;
-  /** Bölümün seslendirmesi (tek dosya). */
+  /** The chapter's narration (a single file). */
   audio?: MediaRef;
 }
 export interface DriveLink { fileId: string; version: string; hash: string }
 export const CONFLICT = "__conflict__";
-/** Eşitlenmemiş değişiklik var mı? (eski kayıtlarda alan yoksa: hiç eşitlenmemişse evet) */
+/** Are there unsynced changes? (for old records without the field: yes if never synced) */
 export const isDirty = (i: Item) => i.dirty ?? i.seq === undefined;
 export type Genre = "roman" | "novella" | "hikaye" | "diger";
-/** Sahne düzeyi yalnızca kurgu türlerinde var (roman, novella, hikâye). Diğer türlerin yapısı sonra tür modülleriyle gelecek. */
+/** Scene level exists only in fiction genres (novel, novella, short story). The structure of other genres will come later with genre modules. */
 export const hasScenes = (b: Pick<Book, "genre">) => (b.genre ?? "roman") !== "diger";
 export interface Book {
   id: string;
   genre?: Genre;
-  /** Yazı dili (yön, yazım denetimi, dışa aktarma). Tanımsızsa arayüz dili. */
+  /** Writing language (direction, spell-check, export). Interface language if undefined. */
   lang?: BookLang;
   /** Hangi örnek şablondan başlatıldı (templates.ts). */
   template?: string;
@@ -47,19 +47,19 @@ export interface Book {
   created: number;
   items: Item[];
   activeId: string;
-  /** Eşitleme durumu (hesap açıkken). */
+  /** Sync status (while an account is active). */
   remote?: boolean;
   cursor?: number;
   metaDirty?: boolean;
   orderDirty?: boolean;
   removed?: { id: string; seq: number }[];
-  /** Google Drive'daki kitap klasörü ve kitap.json bilgisi. metaHash tanımsızsa: Drive'daki künye benimsenir. */
+  /** The book folder on Google Drive and the kitap.json info. If metaHash is undefined: the Drive metadata is adopted. */
   drive?: { folderId: string; metaFileId?: string; metaVersion?: string; metaHash?: string };
-  /** Çöp kutusuna atıldığı an (kitap kitaplıkta gizlenir, silinmez). */
+  /** The moment it was moved to the trash (the book is hidden in the library, not deleted). */
   trashed?: number;
   cover?: MediaRef;
 }
-/** Çöpte olmayan bölümler ve kısımlar. */
+/** Chapters and parts that are not in the trash. */
 export const live = (b: Book): Item[] => b.items.filter((i) => !i.trashed);
 interface Settings { theme: Theme; lang: Lang; focus: boolean; typewriter: boolean; dailyGoal: number; fontSize: number; customBg: string; customInk: string }
 interface Daily { date: string; words: number }
@@ -158,7 +158,7 @@ export const useStore = create<State>((setS, getS) => {
       try {
         saved = await get<Persisted>(KEY);
         if (!saved) {
-          // v1 (tek bölümlü) kayıtları yeni kitaplığa taşı
+          // move v1 (single-chapter) records to the new library
           const old = await get<{ chapters: { id: string; body: string; updated: number }[]; activeId: string }>(OLD_KEY);
           if (old?.chapters.length) {
             const items = old.chapters.map((c) => ({ ...mkItem("chapter", "", c.body), id: c.id, updated: c.updated }));
@@ -166,7 +166,7 @@ export const useStore = create<State>((setS, getS) => {
             saved = { ...defaults, books: [book] };
           }
         }
-      } catch { /* IndexedDB kapalı */ }
+      } catch { /* IndexedDB unavailable */ }
       const s = saved ?? defaults;
       setS({ ...s, deletedBooks: s.deletedBooks ?? [], owner: s.owner ?? null, driveTrash: s.driveTrash ?? [], settings: { ...defaults.settings, ...s.settings, lang: isUiLang(s.settings?.lang) ? s.settings.lang : defaults.settings.lang }, daily: s.daily.date === today() ? s.daily : { date: today(), words: 0 }, ready: true });
     },
@@ -198,7 +198,7 @@ export const useStore = create<State>((setS, getS) => {
         books: s.books.map((b) => {
           if (b.id !== bookId) return b;
           if (b.cover) void delBlob(b.cover.id);
-          // Drive'da zaten bir kapak varsa aynı dosya yerinde güncellenir.
+          // If Drive already has a cover, the same file is updated in place.
           return { ...b, cover: { ...ref, ...(b.cover?.drive ? { drive: b.cover.drive } : {}) } };
         }),
       }));
@@ -242,7 +242,7 @@ export const useStore = create<State>((setS, getS) => {
       withBook((b) => {
         let items = [...b.items, it];
         if (kind === "scene") {
-          // Sahne, etkin bölümün (ve sahnelerinin) hemen arkasına eklenir.
+          // The scene is inserted right after the active chapter (and its scenes).
           const idx = b.items.findIndex((i) => i.id === b.activeId);
           let at = idx < 0 ? b.items.length : idx + 1;
           while (at < b.items.length && b.items[at]!.level === 2) at++;
@@ -304,7 +304,7 @@ export const useStore = create<State>((setS, getS) => {
 const validActive = (items: Item[], activeId: string) =>
   items.some((i) => i.id === activeId && i.kind === "chapter" && !i.trashed) ? activeId : (items.find((i) => i.kind === "chapter" && !i.trashed)?.id ?? "");
 
-/** Kalıcı silme: sunucuya silme bilgisi gider, Drive dosyaları Drive çöp kutusuna taşınır. */
+/** Permanent delete: the deletion is sent to the server, Drive files are moved to the Drive trash. */
 function purgeItems(s: State, ids: string[]): Partial<State> {
   const b = s.books.find((x) => x.id === s.activeBookId);
   if (!b || !ids.length) return {};
@@ -325,7 +325,7 @@ function purgeBooks(s: State, ids: string[]): Partial<State> {
     books: s.books.filter((b) => !ids.includes(b.id)),
     activeBookId: s.activeBookId && ids.includes(s.activeBookId) ? null : s.activeBookId,
     deletedBooks: [...(s.deletedBooks ?? []), ...gone.filter((b) => b.remote).map((b) => b.id)],
-    // Drive'daki klasör kalıcı silinmez, Drive çöp kutusuna taşınır (30 gün geri alınabilir).
+    // The Drive folder is not permanently deleted; it goes to the Drive trash (recoverable for 30 days).
     driveTrash: [...(s.driveTrash ?? []), ...gone.flatMap((b) => (b.drive ? [b.drive.folderId] : []))],
   };
 }

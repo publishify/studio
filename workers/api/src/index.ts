@@ -6,14 +6,14 @@ import type { AppEnv } from "./types";
 
 export { BookDO } from "./book-do";
 
-/** Hız sınırlama (D1, sabit pencere). Kurtarma kodu denemelerini ve hesap oluşturmayı kötüye kullanıma karşı sınırlar. */
+/** Rate limiting (D1, fixed window). Limits recovery-code attempts and account creation against abuse. */
 const rateLimit = (bucket: string, max: number, windowMs: number): MiddlewareHandler<AppEnv> => async (c, next) => {
   const ip = c.req.header("cf-connecting-ip") ?? "local";
   const win = Math.floor(Date.now() / windowMs);
   const row = await c.env.DB.prepare(
     "INSERT INTO rate_limits (key, window, count) VALUES (?, ?, 1) ON CONFLICT(key) DO UPDATE SET count = CASE WHEN window = excluded.window THEN count + 1 ELSE 1 END, window = excluded.window RETURNING count",
   ).bind(`${bucket}:${ip}`, win).first<{ count: number }>();
-  if (Math.random() < 0.02) await c.env.DB.prepare("DELETE FROM rate_limits WHERE window < ?").bind(win - 1).run(); // eski sayaçları ara sıra temizle
+  if (Math.random() < 0.02) await c.env.DB.prepare("DELETE FROM rate_limits WHERE window < ?").bind(win - 1).run(); // occasionally clean old counters
   if ((row?.count ?? 0) > max) return c.json({ error: "rate" }, 429, { "retry-after": String(Math.ceil(windowMs / 1000)) });
   await next();
 };
@@ -21,7 +21,7 @@ const rateLimit = (bucket: string, max: number, windowMs: number): MiddlewareHan
 const app = new Hono<AppEnv>();
 
 app.use("/api/*", async (c, next) => {
-  // CSRF: durum değiştiren istekler yalnızca kendi kaynağımızdan gelebilir.
+  // CSRF: state-changing requests may only come from our own origin.
   if (c.req.method !== "GET" && c.req.method !== "HEAD") {
     const origin = c.req.header("origin");
     if (origin && origin !== new URL(c.req.url).origin) return c.json({ error: "origin" }, 403);
@@ -43,7 +43,7 @@ const json = async <T extends v.GenericSchema>(c: Parameters<typeof currentUser>
   return r.success ? r.output : null;
 };
 
-/** Gövdeyi gerçek boyutuyla sınırlar: content-length başlığına (yoksa ya da yalansa) güvenmez. */
+/** Limits the body by its real size: does not trust the content-length header (missing or lying). */
 const jsonLimited = async <T extends v.GenericSchema>(c: Parameters<typeof currentUser>[0], schema: T, max: number): Promise<v.InferOutput<T> | "large" | null> => {
   const declared = Number(c.req.header("content-length") ?? 0);
   if (declared > max) return "large";
@@ -147,7 +147,7 @@ app.delete("/api/books/:id", requireUser, async (c) => {
   return c.json({ ok: true });
 });
 
-/* ---------- Yayınla (CMS) ---------- */
+/* ---------- Publish (CMS) ---------- */
 const pubSchema = v.object({
   slug: v.pipe(v.string(), v.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/), v.minLength(3), v.maxLength(60)),
   title: v.pipe(v.string(), v.minLength(1), v.maxLength(300)),
@@ -198,7 +198,7 @@ app.delete("/api/publish/:id", requireUser, async (c) => {
 
 app.all("/api/*", (c) => c.json({ error: "not_found" }, 404));
 
-/* ---------- Herkese açık yayın sayfaları: /k/<slug> ve /k/<slug>/<bölüm> ---------- */
+/* ---------- Public publication pages: /k/<slug> and /k/<slug>/<chapter> ---------- */
 type PubBook = { id: string; slug: string; title: string; author: string; description: string; genre: string; lang: string; kind: string; published: number; updated: number };
 type PubChapter = { n: number; part: string; title: string; body: string };
 const html = (c: Parameters<typeof currentUser>[0], body: string, status: 200 | 404 = 200) => {
@@ -211,7 +211,7 @@ const html = (c: Parameters<typeof currentUser>[0], body: string, status: 200 | 
 const notFound = (c: Parameters<typeof currentUser>[0]) =>
   html(c, page({ title: "Bulunamadı — Publishify", description: "", canonical: new URL(c.req.url).origin, lang: "tr", noindex: true, body: "<h1>Sayfa bulunamadı</h1><p><a href=\"/\">Publishify</a></p>" }), 404);
 
-/** Bir bölümün sayfası (kitabın bölümü ya da tek parçalık yazının kendisi). */
+/** A chapter's page (a chapter of a book, or the single-piece writing itself). */
 const articleHtml = (c: Parameters<typeof currentUser>[0], book: PubBook, ch: PubChapter, total: number, single: boolean) => {
   const origin = new URL(c.req.url).origin;
   const slug = book.slug;
@@ -240,7 +240,7 @@ app.get("/k/:slug", async (c) => {
   const book = await c.env.DB.prepare("SELECT * FROM published_books WHERE slug = ?").bind(slug).first<PubBook>();
   if (!book) return notFound(c);
   const chs = (await c.env.DB.prepare("SELECT n, part, title FROM published_chapters WHERE book_id = ? ORDER BY n").bind(book.id).all<Omit<PubChapter, "body">>()).results;
-  // Tek parçalık yazı (blog, deneme, hikâye, makale…): içerik doğrudan bu adreste.
+  // Single-piece writing (blog, essay, story, article…): the content is directly at this address.
   if (chs.length === 1) {
     const one = await c.env.DB.prepare("SELECT n, part, title, body FROM published_chapters WHERE book_id = ? AND n = 1").bind(book.id).first<PubChapter>();
     if (one) return articleHtml(c, book, one, 1, true);

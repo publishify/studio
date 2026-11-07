@@ -1,5 +1,5 @@
-// Tanıtım sitesi üreticisi: içerikten statik HTML, sitemap, robots, llms.txt ve _headers üretir.
-// Çıktı apps/web/dist/ köküne yazılır (editör /studio/ altında, bkz. apps/web/vite.config.ts).
+// Marketing-site generator: produces static HTML, sitemap, robots, llms.txt and _headers from the content.
+// Output is written to the root of apps/web/dist/ (the editor is under /studio/, see apps/web/vite.config.ts).
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -104,7 +104,7 @@ ${preload}<style>${css}</style>
 const write = (rel, content) => { const f = path.join(OUT, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, content); };
 const copyDir = (from, to) => { for (const e of fs.readdirSync(from, { withFileTypes: true })) { const a = path.join(from, e.name), b = path.join(to, e.name); if (e.isDirectory()) { fs.mkdirSync(b, { recursive: true }); copyDir(a, b); } else fs.copyFileSync(a, b); } };
 
-// Eski (kök tabanlı) editör varlıkları artık kullanılmaz
+// Old (root-based) editor assets are no longer used
 fs.rmSync(path.join(OUT, "assets"), { recursive: true, force: true });
 
 // ---- sayfalar
@@ -185,5 +185,5 @@ write("_headers", `/*
   Cache-Control: public, max-age=3600
 `);
 
-console.log(`site: ${pages.length * 2} sayfa + 404, sitemap, robots, llms.txt → ${path.relative(process.cwd(), OUT) || OUT}`);
+console.log(`site: ${pages.length * 2} pages + 404, sitemap, robots, llms.txt → ${path.relative(process.cwd(), OUT) || OUT}`);
 await import("./check.mjs");

@@ -14,7 +14,7 @@ export interface SyncItem {
   kind: "part" | "chapter" | "scene";
   title: string;
   body: string;
-  /** İstemcinin bu bölümü son eşitlediği sunucu sıra numarası (0 = yeni). */
+  /** The server sequence number at which the client last synced this chapter (0 = new). */
   baseSeq: number;
   deleted?: boolean;
 }

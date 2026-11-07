@@ -25,7 +25,7 @@ export async function sha256(s: string): Promise<string> {
 }
 const randomToken = (n = 32) => b64url(crypto.getRandomValues(new Uint8Array(n)));
 
-/** 100 bitlik kurtarma kodu: XXXXX-XXXXX-XXXXX-XXXXX (karışmayan harfler). */
+/** 100-bit recovery code: XXXXX-XXXXX-XXXXX-XXXXX (unambiguous letters). */
 function newRecoveryCode(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(20));
@@ -68,7 +68,7 @@ async function takeChallenge(c: C, kind: string) {
   const id = getCookie(c, "pf_ch");
   if (!id) return null;
   const row = await c.env.DB.prepare("SELECT challenge, user_id, name FROM challenges WHERE id = ? AND kind = ? AND expires > ?").bind(id, kind, Date.now()).first<{ challenge: string; user_id: string | null; name: string | null }>();
-  await c.env.DB.prepare("DELETE FROM challenges WHERE id = ?").bind(id).run(); // tek kullanımlık
+  await c.env.DB.prepare("DELETE FROM challenges WHERE id = ?").bind(id).run(); // single-use
   deleteCookie(c, "pf_ch", { path: "/api/auth" });
   return row;
 }
@@ -133,7 +133,7 @@ export async function loginVerify(c: C, response: AuthenticationResponseJSON) {
 export async function recover(c: C, code: string) {
   const row = await c.env.DB.prepare("SELECT id, name FROM users WHERE recovery_hash = ?").bind(await sha256(normalizeCode(code))).first<{ id: string; name: string }>();
   if (!row) return c.json({ error: "code" }, 400);
-  const fresh = newRecoveryCode(); // kullanılan kod geçersiz olur
+  const fresh = newRecoveryCode(); // the used code becomes invalid
   await c.env.DB.prepare("UPDATE users SET recovery_hash = ? WHERE id = ?").bind(await sha256(normalizeCode(fresh)), row.id).run();
   await startSession(c, row.id);
   return c.json({ user: row, recoveryCode: fresh });

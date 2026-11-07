@@ -1,5 +1,5 @@
-// Sesle yazma: tarayıcının konuşma tanıma özelliği (Web Speech API). Chrome/Edge/Safari'de çalışır.
-// Gizlilik: tarayıcı sesi kendi konuşma tanıma hizmetine gönderir (örn. Chrome → Google); Publishify sunucusuna ses gitmez.
+// Dictation: the browser's speech recognition (Web Speech API). Works in Chrome/Edge/Safari.
+// Privacy: the browser sends audio to its own speech-recognition service (e.g. Chrome → Google); no audio goes to the Publishify server.
 import type { EditorView } from "@codemirror/view";
 import type { Lang } from "./i18n";
 
@@ -21,15 +21,15 @@ const voice: Partial<Record<Lang, [string, string][]>> = {
   en: [["new paragraph", "\n\n"], ["new line", "\n"], ["semicolon", ";"], ["question mark", "?"], ["exclamation mark", "!"], ["colon", ":"], ["ellipsis", "…"], ["period", "."], ["comma", ","]],
 };
 
-/** "nokta", "virgül", "yeni satır" gibi söylenen komutları işarete çevirir. */
+/** Turns spoken commands ("nokta"/"period", "virgül"/"comma", "yeni satır"/"new line") into punctuation. */
 export function applyVoiceCommands(text: string, lang: Lang): string {
   let out = text;
   for (const [phrase, sym] of voice[lang] ?? []) out = out.replace(new RegExp(`\\s*(?:^|\\s)${phrase}(?=\\s|$|[.,!?])`, "giu"), sym);
   return out.replace(/\n +/g, "\n");
 }
 
-/** Konuşmayı imlecin olduğu yere yazar: boşluk, büyük harf ve noktalamayı düzeltir. */
-/** cmd: noktalama komutlarının dili (yalnızca tr/en), locale: büyük harf kuralı için konuşma dili. */
+/** Writes speech at the cursor: fixes spacing, capitalisation and punctuation. */
+/** cmd: language of the punctuation commands (tr/en only), locale: speech language for the capitalisation rule. */
 export function insertDictated(view: EditorView, raw: string, cmd: Lang | null, locale: string): void {
   let text = cmd ? applyVoiceCommands(raw.trim(), cmd) : raw.trim();
   if (!text) return;
@@ -42,7 +42,7 @@ export function insertDictated(view: EditorView, raw: string, cmd: Lang | null, 
   view.dispatch({ changes: { from, to, insert }, selection: { anchor: from + insert.length }, scrollIntoView: true, userEvent: "input.dictate" });
 }
 
-/** Dinlemeyi başlatır; döndürülen işlev durdurur. Sessizlikte tarayıcı kapatırsa kendiliğinden yeniden başlar. */
+/** Starts listening; the returned function stops it. If the browser stops during silence, it restarts by itself. */
 export function startDictation(speech: string, onFinal: (text: string) => void, onStop: (reason?: "denied" | "error") => void): () => void {
   const R = ctor();
   if (!R) { onStop("error"); return () => undefined; }
@@ -66,5 +66,5 @@ export function startDictation(speech: string, onFinal: (text: string) => void, 
     window.setTimeout(() => { if (active) try { rec.start(); } catch { active = false; onStop(); } }, 200);
   };
   try { rec.start(); } catch { onStop("error"); return () => undefined; }
-  return () => { if (!active) return; active = false; try { rec.stop(); } catch { /* zaten durmuş */ } onStop(); };
+  return () => { if (!active) return; active = false; try { rec.stop(); } catch { /* already stopped */ } onStop(); };
 }

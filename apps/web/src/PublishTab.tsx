@@ -10,7 +10,7 @@ import { api } from "./sync";
 
 interface Pub { id: string; slug: string; description: string; kind?: string; updated: number }
 
-/** Yayınla (CMS): kitabı herkese açık bir sayfa olarak yayımla, güncelle ya da kaldır. */
+/** Publish (CMS): publish the book as a public page, update it, or take it down. */
 export function PublishTab({ lang }: { lang: Lang }) {
   const book = useStore(activeBook);
   const account = useStore((s) => s.account);
@@ -42,8 +42,8 @@ export function PublishTab({ lang }: { lang: Lang }) {
   const chapters = publishChapters(book);
   const url = `${location.origin}/k/${pub?.slug ?? slug}`;
   const share = async (u: string, title: string) => {
-    // Telefon ve Mac'te sistemin paylaşma menüsü; desteklenmiyorsa bağlantı kopyalanır.
-    if (navigator.share) { try { await navigator.share({ title, url: u }); } catch { /* vazgeçildi */ } return; }
+    // The system share sheet on phones and Mac; if unsupported, the link is copied.
+    if (navigator.share) { try { await navigator.share({ title, url: u }); } catch { /* cancelled */ } return; }
     void navigator.clipboard?.writeText(u);
     setCopied(true);
   };

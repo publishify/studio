@@ -1,9 +1,9 @@
-// Herkese açık yayın sayfaları: güvenli Markdown → HTML ve sayfa şablonları (sunucu taraflı, istemci JS'i yok).
+// Public publication pages: safe Markdown → HTML and page templates (server-side, no client JS).
 import { Marked } from "marked";
 
 export const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
-/** Yazı dilleri. rtl: sağdan sola yazılır. */
+/** Writing languages. rtl: written right to left. */
 export const langs = {
   tr: { rtl: false, name: "Türkçe" },
   ku: { rtl: false, name: "Kurdî (Kurmancî)" }, zza: { rtl: false, name: "Zazakî (Kırmancki)" },
@@ -17,10 +17,10 @@ const htmlLang = (l: string) => (l === "ota" ? "ota-Arab" : l === "ku" ? "ku-Lat
 
 const safeHref = (u: string): string => (/^(https?:\/\/|mailto:|\/(?!\/|\\)|#)/i.test(u.trim()) ? u.trim() : "");
 
-// Yazarın metni bizim alan adımızda yayımlanır: ham HTML metne çevrilir, bağlantılar ve görseller süzülür.
+// The author's text is published on our domain: raw HTML is converted to text; links and images are filtered.
 const md = new Marked({
   gfm: true,
-  breaks: true, // satır sonları korunur (şiir, küçürek öykü)
+  breaks: true, // line breaks are preserved (poetry, flash fiction)
   renderer: {
     html: ({ text }) => esc(text),
     link({ href, title, tokens }) {
@@ -72,15 +72,15 @@ export function page(o: PageOpts): string {
 
 export const CSP = "default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https: data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
 
-/** Yayın türleri: tek parçalık yazılar (blog, deneme, makale…) da kitaplar gibi yayınlanır. */
+/** Publication types: single-piece writings (blog, essay, article…) are published like books too. */
 export const kinds = ["kitap", "roman", "novella", "hikaye", "kucurek", "siir", "deneme", "blog", "makale", "kurgu-disi", "ani", "oyun"] as const;
 export type Kind = (typeof kinds)[number];
-/** schema.org türü (arama motorları ve yapay zekâ için). */
+/** schema.org type (for search engines and AI). */
 export const schemaType = (k: string): string =>
   k === "kitap" || k === "roman" || k === "novella" ? "Book" : k === "makale" ? "ScholarlyArticle" : k === "blog" ? "BlogPosting" : k === "oyun" ? "CreativeWork" : "Article";
 
 const tr = (l: string) => l === "tr";
-/** Paylaşma bağlantıları: JavaScript ve üçüncü taraf betik yok, tıklayınca ilgili sitenin paylaşma sayfası açılır. */
+/** Share links: no JavaScript and no third-party scripts; clicking opens the relevant site's share page. */
 export function shareLinks(url: string, title: string, lang: string): string {
   const u = encodeURIComponent(url);
   const ti = encodeURIComponent(title);

@@ -1,4 +1,4 @@
-/* Publishify tanıtım sitesi: tek dosya, JavaScript yok, harici istek yok. */
+/* Publishify marketing site: a single file, no JavaScript, no external requests. */
 :root{
   --bg:#0a0f0b;--bg2:#0e1510;--card:rgba(255,255,255,.04);--ink:#eef2ec;--muted:#98a595;--line:rgba(255,255,255,.1);
   --green:#a9cf9c;--green2:#7fb571;--pastel:#243024;--btn-ink:#0a1a08;
@@ -26,7 +26,7 @@ p{margin:0 0 1em}
 .muted{color:var(--muted)}
 .small{font-size:.9rem}
 
-/* üst çubuk */
+/* top bar */
 header.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:18px;height:64px}
 .brand{display:flex;align-items:center;color:var(--green2)}
@@ -44,7 +44,7 @@ details.menu nav a{padding:10px 12px;color:var(--ink);text-decoration:none;borde
 details.menu nav a:hover{background:var(--bg2)}
 @media (min-width:920px){nav.main{display:flex}details.menu{display:none}.top .right{margin-inline-start:0}}
 
-/* düğmeler */
+/* buttons */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:12px;font-weight:600;text-decoration:none;font-size:1rem;border:1.5px solid transparent;line-height:1.2}
 .btn.primary{background:var(--green);color:var(--btn-ink)}
 .btn.primary:hover{filter:brightness(1.08);text-decoration:none}
@@ -64,7 +64,7 @@ details.menu nav a:hover{background:var(--bg2)}
 .shot img{border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--line);background:var(--card)}
 .shot figcaption{font-size:.88rem;color:var(--muted);margin-top:12px}
 
-/* bölümler */
+/* sections */
 section.s{padding:clamp(48px,7vw,96px) 0}
 section.s.alt{background:var(--bg2)}
 .head{max-width:44rem;margin-bottom:2.2rem}
@@ -133,7 +133,7 @@ footer.foot .brand{margin-bottom:12px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media print{header.top,footer.foot,.band,.cta{display:none}body{background:#fff;color:#000}}
 
-/* ---- koyu, ışıklı tasarım (Figma taslağı) ---- */
+/* ---- dark, glowing design (Figma draft) ---- */
 html{color-scheme:dark}
 body{background:radial-gradient(1200px 600px at 75% -10%,rgba(102,160,90,.22),transparent 60%),var(--bg)}
 h1{font-weight:700;letter-spacing:-.03em;line-height:1.02}

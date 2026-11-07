@@ -1,6 +1,6 @@
 import type { Book } from "./store";
 
-/** Yayın türleri (sunucudaki `kinds` ile aynı). Tek parçalık yazılar da yayınlanır. */
+/** Publication types (same as `kinds` on the server). Single-piece writings are published too. */
 export const pubKinds: { id: string; tr: string; en: string }[] = [
   { id: "kitap", tr: "Kitap", en: "Book" },
   { id: "roman", tr: "Roman", en: "Novel" },
@@ -20,7 +20,7 @@ const fromTemplate: Record<string, string> = {
   "roman-uc-perde": "roman", "roman-kahraman": "roman", novella: "novella", hikaye: "hikaye", kucurek: "kucurek", siir: "siir",
   deneme: "deneme", "deneme-kitabi": "kitap", ani: "ani", rehber: "kurgu-disi", makale: "makale", tez: "kitap", cocuk: "kitap", oyun: "oyun", blog: "blog",
 };
-/** Kitabın şablonundan ya da türünden varsayılan yayın türü. */
+/** Default publication type from the book's template or genre. */
 export function defaultKind(b: Pick<Book, "template" | "genre">): string {
   if (b.template && fromTemplate[b.template]) return fromTemplate[b.template]!;
   return b.genre === "roman" || b.genre === "novella" || b.genre === "hikaye" ? b.genre : "kitap";

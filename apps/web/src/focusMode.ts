@@ -1,7 +1,7 @@
 import { type Range } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 
-/** Odak modu: imlecin bulunduğu paragraf dışındaki her şey soluklaşır; imleç ekranın ortasında kalır (daktilo). */
+/** Focus mode: everything except the paragraph with the cursor fades; the cursor stays in the middle of the screen (typewriter). */
 function build(view: EditorView): DecorationSet {
   const { state } = view;
   const head = state.doc.lineAt(state.selection.main.head).number;
@@ -34,7 +34,7 @@ export const focusDim = [
   ),
 ];
 
-/** Daktilo modu: imleç hep ekranın ortasında kalır. */
+/** Typewriter mode: the cursor always stays in the middle of the screen. */
 export const typewriter = EditorView.updateListener.of((u) => {
   if (!u.selectionSet && !u.docChanged) return;
   const view = u.view;

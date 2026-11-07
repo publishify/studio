@@ -1,4 +1,4 @@
-// Drive eşitleme mantığı, bellekteki sahte Drive'a karşı (src/dev/mock-drive.ts).
+// Drive sync logic, against the in-memory fake Drive (src/dev/mock-drive.ts).
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 type Mock = { files: Map<string, any>; log: string[]; mk: (o: any) => any; touch: (f: any) => void };
@@ -8,7 +8,7 @@ let S: () => ReturnType<typeof import("../store").useStore.getState>;
 
 beforeAll(async () => {
   await import("../dev/mock-drive");
-  globalThis.fetch = window.fetch; // sahte Drive, genel fetch'e de bağlansın
+  globalThis.fetch = window.fetch; // bind the fake Drive to the global fetch too
   M = (window as any).__mock;
   drive = (M as any).drive;
   S = () => (M as any).store.getState();
@@ -21,8 +21,8 @@ beforeEach(async () => {
   S().patch(() => ({ books: [], activeBookId: null, driveTrash: [] }));
 });
 
-// connectDrive arka planda ilk eşitlemeyi başlatır; bitmesini bekleriz.
-const settle = () => vi.waitFor(() => { if (drive.useDrive.getState().status === "syncing") throw new Error("meşgul"); }, { timeout: 4000, interval: 10 });
+// connectDrive starts the first sync in the background; we wait for it to finish.
+const settle = () => vi.waitFor(() => { if (drive.useDrive.getState().status === "syncing") throw new Error("busy"); }, { timeout: 4000, interval: 10 });
 const sync = async () => { await settle(); await sync(); await settle(); };
 const book = (id: string) => S().books.find((b) => b.id === id)!;
 const folderOf = (id: string) => [...M.files.values()].find((f) => f.appProperties?.pfBook === id);
@@ -36,10 +36,10 @@ const setup = async () => {
   return id;
 };
 
-// ATLANDI: happy-dom'un fetch/Response uygulaması sahte Drive ile takılıyor (test çalışmayı bırakıyor).
-// Aynı senaryolar tarayıcıda sahte Drive ile (?mockdrive) elle geçti. Gerçek tarayıcı testine (Playwright) taşınacak.
-describe.skip("Google Drive eşitleme", () => {
-  it("ilk bağlanışta klasör, bölüm dosyaları ve kitap.json yüklenir; boşta yazma olmaz", async () => {
+// SKIPPED: happy-dom's fetch/Response implementation stalls with the fake Drive (the test stops running).
+// The same scenarios passed by hand in the browser with the fake Drive (?mockdrive). To be moved to a real-browser test (Playwright).
+describe.skip("Google Drive sync", () => {
+  it("on first connection the folder, chapter files and kitap.json are uploaded; no writes when idle", async () => {
     const id = await setup();
     const names = filesIn(id).map((f) => f.name);
     expect(names).toContain("kitap.json");
@@ -49,7 +49,7 @@ describe.skip("Google Drive eşitleme", () => {
     expect(M.log.filter((l) => !l.startsWith("GET"))).toEqual([]);
   });
 
-  it("Drive'da değişen bölüm yerele iner", async () => {
+  it("a chapter changed on Drive comes down to the local copy", async () => {
     const id = await setup();
     const c = book(id).items[0]!;
     const f = M.files.get(c.drive!.fileId);
@@ -59,7 +59,7 @@ describe.skip("Google Drive eşitleme", () => {
     expect(book(id).items[0]!.body).toContain("başka cihazdan");
   });
 
-  it("iki taraf da değişirse Drive sürümü kalır, yerel metin çakışan kopya olur", async () => {
+  it("if both sides changed, the Drive version stays and the local text becomes a conflicted copy", async () => {
     const id = await setup();
     const c = book(id).items[0]!;
     const f = M.files.get(c.drive!.fileId);
@@ -76,7 +76,7 @@ describe.skip("Google Drive eşitleme", () => {
     expect(filesIn(id).some((x) => x.name.includes("çakışan kopya"))).toBe(true);
   });
 
-  it("yerelde silinen bölüm Drive çöp kutusuna gider, kalıcı silinmez", async () => {
+  it("a chapter deleted locally goes to the Drive trash, not deleted permanently", async () => {
     const id = await setup();
     const victim = book(id).items[1]!;
     const fileId = victim.drive!.fileId;
@@ -88,7 +88,7 @@ describe.skip("Google Drive eşitleme", () => {
     expect(M.files.has(fileId)).toBe(true);
   });
 
-  it("çöpteki bölüm Drive'dan silinmez, künyede işaretlenir", async () => {
+  it("a trashed chapter is not deleted from Drive; it is marked in the metadata", async () => {
     const id = await setup();
     const victim = book(id).items[1]!;
     S().setActive(book(id).items[0]!.id);
@@ -99,7 +99,7 @@ describe.skip("Google Drive eşitleme", () => {
     expect(meta.items.some((i: any) => i.trashed)).toBe(true);
   });
 
-  it("Drive'da olup burada olmayan kitap sıra, kısım ve sahne düzeyiyle iner", async () => {
+  it("a book that is on Drive but not here comes down with its order, parts and scene levels", async () => {
     await drive.connectDrive();
     await sync();
     const root = [...M.files.values()].find((f) => f.appProperties?.pfRoot === "1");

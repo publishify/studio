@@ -3,7 +3,7 @@ import { useState } from "react";
 import { type Lang, t } from "./i18n";
 import { type Book, titleOf, useStore } from "./store";
 
-/** Kalıcı silmeden önce yerinde, iki adımlı onay (tarayıcı penceresi değil). */
+/** Two-step confirmation in place, before permanent delete (not a browser dialog). */
 export function EmptyTrashButton({ lang, onConfirm }: { lang: Lang; onConfirm: () => void }) {
   const [ask, setAsk] = useState(false);
   if (!ask) return <button className="btn" onClick={() => setAsk(true)}><Trash2 size={14} style={{ display: "inline", verticalAlign: "-2px" }} /> {t(lang, "emptyTrash")}</button>;
@@ -18,7 +18,7 @@ export function EmptyTrashButton({ lang, onConfirm }: { lang: Lang; onConfirm: (
 
 const when = (n: number, lang: Lang) => new Date(n).toLocaleDateString(lang, { day: "numeric", month: "short" });
 
-/** Kitaplıkta: çöpteki kitaplar. */
+/** In the library: books in the trash. */
 export function LibraryTrash({ lang }: { lang: Lang }) {
   const all = useStore((s) => s.books);
   const books = all.filter((b) => b.trashed);
@@ -41,7 +41,7 @@ export function LibraryTrash({ lang }: { lang: Lang }) {
   );
 }
 
-/** Kenar çubuğunda: bu kitabın çöpteki bölümleri. */
+/** In the sidebar: this book's chapters in the trash. */
 export function ItemTrash({ book, lang }: { book: Book; lang: Lang }) {
   const { restoreItem, purgeItem, emptyItemTrash } = useStore();
   const [open, setOpen] = useState(false);

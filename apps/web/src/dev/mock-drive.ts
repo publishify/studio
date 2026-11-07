@@ -1,6 +1,6 @@
 // @ts-nocheck
-// Yalnızca geliştirmede (?mockdrive): Google girişini ve Drive API'sini bellekte taklit eder,
-// böylece Drive eşitlemesi gerçek hesap olmadan denenebilir. Üretim derlemesine girmez.
+// Development only (?mockdrive): imitates Google sign-in and the Drive API in memory,
+// so Drive sync can be tried without a real account. Not part of the production build.
 import * as drive from "../drive";
 import { useStore } from "../store";
 

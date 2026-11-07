@@ -1,6 +1,6 @@
 import type { Theme } from "./store";
 
-/** Tema seçicideki yuvarlak simgeler için zemin ve yazı renkleri. */
+/** Background and text colours for the round icons in the theme picker. */
 export const themeColors: Record<Exclude<Theme, "custom">, { bg: string; ink: string }> = {
   light: { bg: "#ffffff", ink: "#111111" },
   dark: { bg: "#19191a", ink: "#f1f1f1" },
@@ -16,7 +16,7 @@ const lum = (hex: string): number => {
   const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; });
   return 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!;
 };
-/** WCAG kontrast oranı (1–21). */
+/** WCAG contrast ratio (1–21). */
 export const contrast = (a: string, b: string): number => {
   const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
   return (x! + 0.05) / (y! + 0.05);

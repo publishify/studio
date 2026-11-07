@@ -1,4 +1,4 @@
-// Geliştirmede ?mockdrive ile sahte Drive yüklenir (src/dev/mock-drive.ts).
+// In development, ?mockdrive loads a fake Drive (src/dev/mock-drive.ts).
 if (import.meta.env.DEV && location.search.includes("mockdrive")) await import("./dev/mock-drive");
 if (import.meta.env.DEV && location.search.includes("demo")) await import("./dev/demo");
 import { StrictMode } from "react";

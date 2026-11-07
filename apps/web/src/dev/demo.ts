@@ -1,5 +1,5 @@
-// Yalnızca geliştirmede (?demo): tanıtım sitesi ekran görüntüleri için örnek kitap yükler. Üretim derlemesine girmez.
-// Örnek: /studio/?demo=1&theme=light&book=tr   (book: tr | ar)
+// Development only (?demo): loads a sample book for the marketing-site screenshots. Not part of the production build.
+// Example: /studio/?demo=1&theme=light&book=tr   (book: tr | ar)
 import { useStore } from "../store";
 import type { Item } from "../store";
 
@@ -36,7 +36,7 @@ const seed = () => {
   }));
   s.setSettings({ theme: (q.get("theme") ?? "light") as "light", lang: (q.get("lang") ?? "tr") as "tr", focus: q.get("focus") === "1", dailyGoal: 500 });
 };
-// Başsız Chrome'da IndexedDB takılabildiği için hemen tohumla; gerçek tarayıcıda init bitince bir kez daha tohumla.
+// IndexedDB can stall in headless Chrome, so seed immediately; in a real browser, seed once more when init finishes.
 seed();
 window.setTimeout(seed, 2500);
 const click = q.get("click");

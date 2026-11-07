@@ -4,9 +4,9 @@ import type { Env, OutItem, SyncIn, SyncOut } from "./types";
 type Row = { id: string; kind: "part" | "chapter" | "scene"; title: string; body: string; deleted: number; seq: number };
 
 /**
- * Kitap başına bir Durable Object (SQLite). Birim bölümdür: her bölümün sunucu sıra numarası (seq) var.
- * İstemci, bölümü en son hangi seq ile aldığını (baseSeq) bildirir; farklıysa çakışmadır ve
- * iki sürüm de korunur ("çakışan kopya"). Hiçbir metin sessizce ezilmez.
+ * One Durable Object (SQLite) per book. The unit is the chapter: each chapter has a server sequence number (seq).
+ * The client reports which seq it last received the chapter at (baseSeq); if it differs, it is a conflict and
+ * both versions are kept ("conflicted copy"). No text is ever silently overwritten.
  */
 export class BookDO extends DurableObject<Env> {
   constructor(ctx: DurableObjectState, env: Env) {
@@ -46,7 +46,7 @@ export class BookDO extends DurableObject<Env> {
             sql.exec("UPDATE items SET deleted = 1, body = '', seq = ? WHERE id = ?", ++seq, it.id);
             accepted[it.id] = seq;
           } else if (row) {
-            forceSend.add(it.id); // sunucuda daha yeni; silme reddedildi, güncel sürüm geri gider
+            forceSend.add(it.id); // newer on the server; deletion rejected, the current version goes back
           }
           continue;
         }
@@ -54,14 +54,14 @@ export class BookDO extends DurableObject<Env> {
           sql.exec("INSERT INTO items (id, kind, title, body, deleted, seq) VALUES (?, ?, ?, ?, 0, ?)", it.id, it.kind, it.title, it.body, ++seq);
           accepted[it.id] = seq;
         } else if (!row.deleted && row.body === it.body && row.title === it.title && row.kind === it.kind) {
-          accepted[it.id] = row.seq; // zaten aynı
+          accepted[it.id] = row.seq; // already the same
         } else if (!row.deleted && row.seq === it.baseSeq) {
           sql.exec("UPDATE items SET title = ?, body = ?, kind = ?, seq = ? WHERE id = ?", it.title, it.body, it.kind, ++seq, it.id);
           accepted[it.id] = seq;
         } else {
-          // Çakışma: sunucu sürümü kalır, istemcinin metni yeni bir bölüm olarak saklanır.
+          // Conflict: the server version stays and the client's text is stored as a new chapter.
           const copyId = crypto.randomUUID();
-          // Bölüm başlığı gövdeden türetildiği için kopya, title alanındaki __conflict__ işaretiyle bilinir.
+          // Because the chapter title is derived from the body, the copy is recognised by the __conflict__ marker in the title field.
           const title = it.kind === "part" ? `${it.title} (çakışan kopya)` : "__conflict__";
           sql.exec("INSERT INTO items (id, kind, title, body, deleted, seq) VALUES (?, ?, ?, ?, 0, ?)", copyId, it.kind, title, it.body, ++seq);
           conflicts.push({ id: it.id, copyId });
@@ -89,7 +89,7 @@ export class BookDO extends DurableObject<Env> {
       const changed = sql.exec<Row>("SELECT id, kind, title, body, deleted, seq FROM items WHERE seq > ?", input.cursor).toArray();
       const items: OutItem[] = [];
       for (const r of changed) {
-        if (accepted[r.id] === r.seq && !forceSend.has(r.id)) continue; // istemcinin kendi yazdığı
+        if (accepted[r.id] === r.seq && !forceSend.has(r.id)) continue; // the client's own write
         items.push({ id: r.id, kind: r.kind, title: r.title, body: r.body, deleted: !!r.deleted, seq: r.seq });
       }
       for (const id of forceSend) {

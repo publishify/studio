@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  // Editör /studio/ altında çalışır; kök adres tanıtım sitesidir (apps/site).
+  // The editor runs under /studio/; the root address is the marketing site (apps/site).
   base: "/studio/",
   build: { target: "es2022", outDir: "dist/studio", emptyOutDir: true },
 });

@@ -7,7 +7,7 @@ import { type Item, useStore } from "./store";
 
 const mb = (n: number) => `${(n / 1024 / 1024).toFixed(n > 10 * 1024 * 1024 ? 0 : 1)} MB`;
 
-/** Bölümün seslendirme dosyası: yükle, dinle, Drive'a gönder. */
+/** A chapter's narration file: upload, listen, send to Drive. */
 export function AudioTab({ item, lang }: { item: Item; lang: Lang }) {
   const { setAudio, removeAudio } = useStore();
   const drive = useDrive((s) => s.status);

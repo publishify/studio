@@ -1,7 +1,7 @@
-// Kendi bulutun: kitaplar yazarın Google Drive'ında düz Markdown dosyaları olarak durur (ADR-0010).
-//   Publishify/<Kitap adı>/kitap.json        künye + sıra + kısımlar
-//   Publishify/<Kitap adı>/NN-bolum-adi.md   her bölüm ayrı dosya
-// Yalnızca `drive.file` izni: uygulama sadece kendi oluşturduğu dosyaları görür.
+// Your own cloud: books live in the author's Google Drive as plain Markdown files (ADR-0010).
+//   Publishify/<Book title>/kitap.json           metadata + order + parts
+//   Publishify/<Book title>/NN-chapter-title.md  one file per chapter
+// Only the `drive.file` scope: the app sees just the files it created itself.
 import { create } from "zustand";
 import { type MediaRef, delBlob, getBlob, putBlob } from "./media";
 import { type Book, CONFLICT, type DriveLink, type Item, titleOf, useStore } from "./store";
@@ -15,7 +15,7 @@ const HINT = "publishify:drive";
 
 export type DriveStatus = "off" | "needs-auth" | "idle" | "syncing" | "error" | "offline";
 const hint = (): string | null => { try { return localStorage.getItem(HINT); } catch { return null; } };
-const setHint = (v: string | null) => { try { if (v) localStorage.setItem(HINT, v); else localStorage.removeItem(HINT); } catch { /* özel pencere */ } };
+const setHint = (v: string | null) => { try { if (v) localStorage.setItem(HINT, v); else localStorage.removeItem(HINT); } catch { /* private window */ } };
 
 export const useDrive = create<{ status: DriveStatus; email: string | null; last: number | null }>(() => ({
   status: hint() ? "needs-auth" : "off",
@@ -24,7 +24,7 @@ export const useDrive = create<{ status: DriveStatus; email: string | null; last
 }));
 const setStatus = (status: DriveStatus) => useDrive.setState((s) => ({ status, last: status === "idle" ? Date.now() : s.last }));
 
-// ── Google oturumu (Google Identity Services, tarayıcıda; sunucuya anahtar gitmez) ──────────────
+// ── Google session (Google Identity Services, in the browser; no key goes to the server) ──────────────
 interface TokenResp { access_token?: string; expires_in?: number; error?: string }
 interface TokenClient { requestAccessToken(o?: { prompt?: string }): void }
 declare global {
@@ -105,7 +105,7 @@ const patchFile = async (id: string, body: Record<string, unknown>): Promise<{ i
   json(await call(`/files/${id}?fields=id,version`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }));
 const download = async (id: string): Promise<string> => (await call(`/files/${id}?alt=media`)).text();
 const downloadBlob = async (id: string): Promise<Blob> => (await call(`/files/${id}?alt=media`)).blob();
-/** Büyük dosyalar (ses) için yeniden başlatılabilir yükleme. */
+/** Resumable upload for large files (audio). */
 async function uploadMedia(fileId: string | null, meta: Record<string, unknown>, blob: Blob): Promise<{ id: string; version: string }> {
   const type = blob.type || "application/octet-stream";
   const start = await call(`${fileId ? `/files/${fileId}` : "/files"}?uploadType=resumable&fields=id,version`, {
@@ -119,7 +119,7 @@ async function uploadMedia(fileId: string | null, meta: Record<string, unknown>,
   if (!r.ok) throw new DriveError(r.status);
   return json(r);
 }
-/** Drive'da duran ama bu cihazda henüz olmayan dosyayı (ses) indirip yerele koyar. */
+/** Downloads a file (audio) that is on Drive but not yet on this device and stores it locally. */
 export async function fetchMedia(ref: MediaRef): Promise<boolean> {
   if (!ref.drive) return false;
   await putBlob(ref.id, await downloadBlob(ref.drive.fileId));
@@ -133,7 +133,7 @@ async function upload(fileId: string | null, meta: Record<string, unknown>, cont
   }, UP));
 }
 
-// ── Yardımcılar ────────────────────────────────────────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────────────
 function hashStr(str: string): string {
   let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
   for (let i = 0; i < str.length; i++) {
@@ -164,7 +164,7 @@ const parseMeta = (text: string): Meta | null => {
 };
 const getBook = (id: string) => useStore.getState().books.find((b) => b.id === id);
 
-// ── Eşitleme ───────────────────────────────────────────────────────────────────────────────────
+// ── Sync ─────────────────────────────────────────────────────────────
 let running = false;
 let rerun = false;
 let timer = 0;
@@ -191,16 +191,16 @@ export async function driveSync(): Promise<void> {
   setStatus("syncing");
   try {
     await getToken(false);
-    // 1) silinenleri Drive çöp kutusuna taşı
+    // 1) move deleted items to the Drive trash
     for (const id of useStore.getState().driveTrash ?? []) {
       try { await patchFile(id, { trashed: true }); } catch (e) { if (!(e instanceof DriveError && e.status === 404)) throw e; }
       useStore.getState().patch((s) => ({ driveTrash: (s.driveTrash ?? []).filter((x) => x !== id) }));
     }
-    // 2) kök klasör ve kitap klasörleri
+    // 2) root folder and book folders
     const roots = await list(`mimeType='${FOLDER}' and trashed=false and appProperties has { key='pfRoot' and value='1' }`);
     const rootId = roots[0]?.id ?? (await createFolder("Publishify", null, { pfRoot: "1" })).id;
     const folders = await list(`'${rootId}' in parents and mimeType='${FOLDER}' and trashed=false`);
-    // 3) Drive'da olup burada olmayan kitapları getir
+    // 3) fetch books that are on Drive but not here
     const known = new Set(useStore.getState().books.map((b) => b.id));
     const fresh = folders.filter((f) => f.appProperties?.pfBook && !known.has(f.appProperties.pfBook));
     if (fresh.length) {
@@ -232,7 +232,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
     folders.push(folder);
   }
   const folderId = folder.id;
-  // Klasör değiştiyse (silinmiş/yeniden kurulmuş) eski dosya bağları geçersizdir; yerel metin korunur, yeniden yüklenir.
+  // If the folder changed (deleted/recreated), old file links are invalid; local text is kept and uploaded again.
   const dm = snap.drive?.folderId === folderId ? snap.drive : undefined;
   const linkOf = (i: Item) => (dm ? i.drive : undefined);
 
@@ -241,13 +241,13 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
   const byId = new Map(files.filter((f) => f.appProperties?.pfId).map((f) => [f.appProperties!.pfId!, f] as const));
   const chapters = snap.items.filter((i) => i.kind === "chapter");
   const order = new Map(chapters.map((c, n) => [c.id, n + 1] as const));
-  // Dosyalar hiç görünmüyorsa (klasör sorunu olabilir) hiçbir bölümü yerelden silme; yeniden yükle.
+  // If no files are visible at all (possibly a folder problem), never delete any chapter locally; upload again.
   const noRemote = byId.size === 0;
 
   const links = new Map<string, DriveLink>();
   const replaces: Replace[] = [];
   const adds: Item[] = [];
-  const removes = new Map<string, string>(); // id -> beklenen özet
+  const removes = new Map<string, string>(); // id -> expected hash
   const uploaded = new Set<string>();
 
   for (const c of chapters) {
@@ -262,7 +262,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
       uploaded.add(c.id);
     };
     if (!f) {
-      if (l && !noRemote && h === l.hash) removes.set(c.id, h); // Drive'dan silinmiş, burada değişmemiş
+      if (l && !noRemote && h === l.hash) removes.set(c.id, h); // deleted on Drive, unchanged here
       else await put(null);
       continue;
     }
@@ -275,12 +275,12 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
     if (text === c.body) links.set(c.id, link);
     else if (!localChanged) replaces.push({ id: c.id, expect: h, body: text, link });
     else {
-      // İki taraf da değişti: Drive sürümü kalır, buradaki metin "çakışan kopya" olur (ADR-0009 ile aynı kural).
+      // Both sides changed: the Drive version stays and the local text becomes a "conflicted copy" (same rule as ADR-0009).
       const copy: Item = { id: crypto.randomUUID(), kind: "chapter", title: CONFLICT, body: c.body, updated: Date.now(), versions: [], dirty: true };
       replaces.push({ id: c.id, expect: h, body: text, link, copy });
     }
   }
-  // Drive'da olup burada olmayan bölümler
+  // Chapters that are on Drive but not here
   for (const [id, f] of byId) {
     if (chapters.some((c) => c.id === id)) continue;
     const text = await download(f.id);
@@ -289,7 +289,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
       dirty: true, drive: { fileId: f.id, version: f.version, hash: hashStr(text) },
     });
   }
-  // Dosya adları (sıra numarası/başlık) değiştiyse yeniden adlandır
+  // Rename if the file names (order number/title) changed
   for (const c of chapters) {
     const f = byId.get(c.id);
     if (!f || uploaded.has(c.id) || replaces.some((r) => r.id === c.id)) continue;
@@ -300,7 +300,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
     links.set(c.id, { ...l, fileId: f.id, version: r.version });
   }
 
-  // Künye: Drive'dakini benimse (yerel değişmediyse) ya da yerelini yaz.
+  // Metadata: adopt Drive's version (if local is unchanged) or write the local one.
   const localMetaChanged = dm?.metaHash !== undefined && metaHash(snap) !== dm.metaHash;
   let applyMeta: Meta | null = null;
   let metaVersion = dm?.metaVersion;
@@ -320,7 +320,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
         for (const r of replaces) {
           const idx = list.findIndex((i) => i.id === r.id);
           const cur = list[idx];
-          if (!cur || hashOf(cur) !== r.expect) continue; // yazılırken değişmiş: sonraki turda
+          if (!cur || hashOf(cur) !== r.expect) continue; // changed while being written: next round
           const versions = cur.body.trim() ? [{ t: now, body: cur.body, label: "drive" }, ...cur.versions].slice(0, 40) : cur.versions;
           list[idx] = { ...cur, body: r.body, updated: now, dirty: true, versions, drive: r.link };
           if (r.copy) list.splice(idx + 1, 0, r.copy);
@@ -345,7 +345,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
             if (have) { next.push({ ...have, ...(have.kind === "part" ? { title: mi.title ?? have.title } : {}), level: mi.level, trashed: mi.trashed }); byItem.delete(mi.id); }
             else if (mi.kind === "part") next.push({ id: mi.id, kind: "part", title: mi.title ?? "", body: "", updated: now, versions: [], dirty: true, trashed: mi.trashed });
           }
-          for (const rest of byItem.values()) if (rest.kind === "chapter") next.push(rest); // künyede henüz olmayan bölümler sona
+          for (const rest of byItem.values()) if (rest.kind === "chapter") next.push(rest); // chapters not yet in the metadata go last
           list = next;
           title = applyMeta.title || b.title;
           author = applyMeta.author ?? b.author;
@@ -369,7 +369,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
     });
   }
 
-  // Künyeyi (ve klasör adını) gerekirse yaz
+  // Write the metadata (and folder name) if needed
   const cur = getBook(bookId);
   if (!cur) return;
   const h = metaHash(cur);
@@ -386,7 +386,7 @@ async function syncBook(bookId: string, rootId: string, folders: DFile[]): Promi
   if (want && folder.name !== want) { await patchFile(folderId, { name: want }); folder.name = want; }
 }
 
-// ── Kapak ve seslendirme ───────────────────────────────────────────────────────────────────────
+// ── Cover and narration ─────────────────────────────────────────────────
 interface MediaJob {
   ref: MediaRef | undefined; file: DFile | undefined; name: string; props: Record<string, string>; folderId: string;
   eager: boolean; noRemote: boolean; read: () => MediaRef | undefined; write: (r: MediaRef | undefined) => void;
@@ -409,7 +409,7 @@ async function syncMedia1(o: MediaJob): Promise<void> {
     if (o.eager) await putBlob(next.id, await downloadBlob(file.id));
     if (o.read()?.id === ref.id) { o.write(next); void delBlob(ref.id); } else if (o.eager) void delBlob(next.id);
   } else if (ref?.drive && !file && !o.noRemote && o.read()?.id === ref.id) {
-    o.write(undefined); // Drive'dan silinmiş
+    o.write(undefined); // deleted on Drive
     void delBlob(ref.id);
   }
 }
@@ -438,16 +438,16 @@ async function syncMedia(bookId: string, folderId: string, files: DFile[], noRem
   }
 }
 
-// ── Dışa açılan işlemler ───────────────────────────────────────────────────────────────────────
+// ── Exposed operations ──────────────────────────────────────────────────
 export async function connectDrive(): Promise<void> {
   const tk = await getToken(true);
   let email = "";
   try {
     const r = await fetch(`${API}/about?fields=user(emailAddress)`, { headers: { authorization: `Bearer ${tk}` } });
     email = ((await r.json()) as { user?: { emailAddress?: string } }).user?.emailAddress ?? "";
-  } catch { /* e-posta gösterilemezse sorun değil */ }
+  } catch { /* no problem if the email cannot be shown */ }
   const prev = hint();
-  if (prev && prev !== "1" && email && prev !== email) clearLinks(); // başka Google hesabı: eski dosya bağları geçersiz
+  if (prev && prev !== "1" && email && prev !== email) clearLinks(); // another Google account: old file links are invalid
   setHint(email || "1");
   useDrive.setState({ status: "idle", email: email || null });
   void driveSync();
@@ -460,7 +460,7 @@ function clearLinks(): void {
   }));
 }
 
-/** Bağlantıyı keser. Yerel kitaplar da Drive'daki dosyalar da olduğu gibi kalır. */
+/** Disconnects. Local books and Drive files stay as they are. */
 export function disconnectDrive(): void {
   if (token && window.google) window.google.accounts.oauth2.revoke(token);
   token = "";
@@ -469,7 +469,7 @@ export function disconnectDrive(): void {
   useDrive.setState({ status: "off", email: null, last: null });
 }
 
-/** Uygulama açılışında bir kez çağrılır. */
+/** Called once when the app starts. */
 export function startDrive(): void {
   if (hint()) {
     getToken(false)

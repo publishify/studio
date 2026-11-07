@@ -1,10 +1,10 @@
-# Yayımlanmamış metin ve raporlar — ASLA commit etme
+# Unpublished manuscripts and reports — NEVER commit (el-yazmasi = manuscripts, raporlar = reports)
 el-yazmasi/*
 !el-yazmasi/README.md
 raporlar/*
 !raporlar/README.md
 
-# Bağımlılıklar ve derleme çıktıları
+# Dependencies and build output
 node_modules/
 dist/
 build/
@@ -15,14 +15,14 @@ target/
 *.wasm
 !crates/**/fixtures/*.wasm
 
-# Ortam ve sırlar
+# Environment and secrets
 .env
 .env.*
 !.env.example
 .dev.vars
 *.pem
 
-# Sistem
+# System
 .DS_Store
 Thumbs.db
 *.log

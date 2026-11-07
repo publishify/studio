@@ -1,4 +1,4 @@
-// Publishify yazı logosu (docs/marka/logo). Rengi temadan gelir: CSS'teki --logo.
+// Publishify wordmark logo (docs/marka/logo). Its colour comes from the theme: --logo in CSS.
 export function Logo({ height = 20, className = "" }: { height?: number; className?: string }) {
   return (
     <svg className={`wordmark ${className}`} viewBox="193 607 1119 251" height={height} width={(height * 1119) / 251} role="img" aria-label="Publishify">

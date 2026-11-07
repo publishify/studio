@@ -16,7 +16,7 @@
   --bg: #f6efdc; --bg-sidebar: #ede4cb; --bg-bar: #f1e8d0; --bg-hover: #e3d8ba; --bg-card: #faf4e3;
   --border: #d9ccaa; --ink: #3a2e1c; --ink-body: #4a3b26; --muted: #8b7a5e; --accent: #8a5a2b; --accent-hover: #9a6a3b; --accent-bg: rgba(138,90,43,.14); --accent-sel: rgba(138,90,43,.14); --accent-ink: #8a5a2b; --on-accent: #ffffff; --quote: #cbb98e;
 }
-/* Yeşil tema: zemin #EFF6ED; yazı ve simgeler #000000. Üzerine gelme/seçili durumlar için diğer iki pastel yeşil. */
+/* Green theme: background #EFF6ED; text and icons #000000. The other two pastel greens are for hover/selected states. */
 :root[data-theme="green"] {
   --logo: #000000;
   --bg: #EFF6ED; --bg-sidebar: #EFF6ED; --bg-bar: #EFF6ED; --bg-hover: #D8EAD3; --bg-card: #EFF6ED;
@@ -24,7 +24,7 @@
   --accent: #B0D5A6; --accent-hover: #C4E0BC; --accent-bg: #C4E0BC; --accent-sel: #B0D5A6; --accent-ink: #000000; --on-accent: #000000;
 }
 
-/* Pembe tema: zemin #FFF1FA; yazı ve simgeler #000000. Üzerine gelme/seçili durumlar siyahın saydam tonları. */
+/* Pink theme: background #FFF1FA; text and icons #000000. Hover/selected states use translucent shades of black. */
 :root[data-theme="pink"] {
   --logo: #000000;
   --bg: #FFF1FA; --bg-sidebar: #FFF1FA; --bg-bar: #FFF1FA; --bg-hover: rgba(0,0,0,.07); --bg-card: #FFF1FA;
@@ -32,7 +32,7 @@
   --accent: #000000; --accent-hover: #2a2a2a; --accent-bg: rgba(0,0,0,.12); --accent-sel: rgba(0,0,0,.16); --accent-ink: #000000; --on-accent: #FFF1FA;
 }
 
-/* Gece teması: zemin #000014; yazı ve simgeler beyaz. Üzerine gelme/seçili durumlar beyazın saydam tonları. */
+/* Night theme: background #000014; text and icons white. Hover/selected states use translucent shades of white. */
 :root[data-theme="night"] {
   --logo: #ffffff;
   --bg: #000014; --bg-sidebar: #000014; --bg-bar: #000014; --bg-hover: rgba(255,255,255,.09); --bg-card: #000014;
@@ -40,7 +40,7 @@
   --accent: #ffffff; --accent-hover: #dcdce6; --accent-bg: rgba(255,255,255,.15); --accent-sel: rgba(255,255,255,.22); --accent-ink: #ffffff; --on-accent: #000014;
 }
 
-/* Özel tema: kullanıcının seçtiği zemin (--c-bg) ve yazı (--c-ink) renginden türetilir. */
+/* Custom theme: derived from the user's chosen background (--c-bg) and text (--c-ink) colours. */
 :root[data-theme="custom"] {
   --logo: var(--c-ink);
   --bg: var(--c-bg); --bg-sidebar: var(--c-bg); --bg-bar: var(--c-bg); --bg-card: var(--c-bg);
@@ -62,7 +62,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .loading { padding: 2rem; color: var(--muted); }
 .spacer { flex: 1; }
 
-/* ortak düğmeler */
+/* shared buttons */
 .icon { width: 28px; height: 28px; display: inline-grid; place-items: center; border-radius: 6px; color: var(--muted); flex: none; }
 .icon:hover:not(:disabled) { background: var(--bg-hover); color: var(--ink); }
 .icon[aria-pressed="true"], .icon.on { background: var(--accent-bg); color: var(--accent-ink); }
@@ -83,7 +83,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .toolbar::-webkit-scrollbar { display: none; }
 .body { flex: 1; min-height: 0; display: flex; }
 
-/* kenar çubuğu */
+/* sidebar */
 .sidebar { width: 260px; flex: none; background: var(--bg-sidebar); border-inline-end: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; }
 .sb-head { display: flex; align-items: center; gap: 6px; padding: 12px 12px 8px; }
 .logo { font-weight: 700; font-size: 15px; letter-spacing: -.01em; display: flex; align-items: center; gap: 7px; }
@@ -121,7 +121,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .sb-foot button:hover { background: var(--bg-hover); color: var(--ink); }
 .sb-foot svg { width: 14px; height: 14px; }
 
-/* editör */
+/* editor */
 main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
 .editor-host { flex: 1; min-height: 0; overflow: hidden; }
 .editor-host .cm-editor { height: 100%; background: transparent; }
@@ -158,7 +158,7 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 .titlebar .icon[aria-pressed="true"] { background: transparent; color: var(--accent-ink); }
 ::selection { background: var(--accent-sel); }
 
-/* sağ panel */
+/* right panel */
 .panel { width: 300px; flex: none; border-inline-start: 1px solid var(--border); background: var(--bg-sidebar); display: flex; flex-direction: column; min-height: 0; }
 .tabs { display: flex; justify-content: center; gap: 4px; padding: 8px; border-bottom: 1px solid var(--border); }
 .pbody { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: 13.5px; line-height: 1.55; }
@@ -181,7 +181,7 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 .versions { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
 .vhead { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 500; }
 
-/* kitaplık */
+/* library */
 .library { max-width: 62rem; margin: 0 auto; padding: 28px 24px 64px; }
 .library header { display: flex; gap: 10px; align-items: center; }
 .library h2 { font-size: 12px; font-weight: 600; color: var(--muted); margin: 36px 0 16px; letter-spacing: .02em; }
@@ -221,7 +221,7 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 @keyframes spin { to { transform: rotate(360deg); } }
 .badge { font-size: 10.5px; padding: 1px 6px; border-radius: 999px; background: rgba(217,119,6,.15); color: #d97706; flex: none; }
 
-/* Çöp kutusu */
+/* Trash */
 .trash { margin-top: 40px; max-width: 640px; }
 .trash h2 { font-size: 15px; }
 .trow { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
@@ -235,7 +235,7 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 .sb-trash-head svg { width: 14px; height: 14px; }
 .sb-trash .trow { padding: 3px 0; }
 
-/* Kapak ve ses */
+/* Cover and audio */
 .cover.has-img { background-size: cover; background-position: center; padding: 0; border-inline-start-color: transparent; }
 .cover.has-img strong, .cover.has-img small { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .coverpick { display: flex; gap: 14px; align-items: flex-start; }
@@ -244,7 +244,7 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 .coverpick p { margin: 6px 0 0; }
 .row2 { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
-/* Tema seçici: yuvarlak simgeler */
+/* Theme picker: round icons */
 .swatches { display: flex; flex-wrap: wrap; gap: 8px; }
 .swatch { width: 28px; height: 28px; flex: none; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); display: grid; place-items: center; font: 600 11px var(--font-ui); padding: 0; transition: transform .12s; }
 .swatch:hover { transform: scale(1.08); }
@@ -253,7 +253,7 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 .colors { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; margin-top: 12px; }
 .colors input[type="color"] { width: 40px; height: 28px; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; }
 
-/* İçindekiler: + menüsü (Kısım / Bölüm / Sahne) */
+/* Contents: the + menu (Part / Chapter / Scene) */
 .addwrap { position: relative; }
 .addmenu { position: absolute; inset-inline-end: 0; top: 26px; z-index: 30; min-width: 160px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 4px; box-shadow: 0 10px 28px -12px rgba(0,0,0,.35); animation: pop .12s ease-out; }
 .addmenu button { display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; padding: 6px 8px; border-radius: 6px; font-size: 13px; }
@@ -266,7 +266,7 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 @keyframes pulse { 50% { opacity: .35; } }
 .toast { position: absolute; left: 50%; bottom: 44px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; font-size: 13px; box-shadow: 0 10px 28px -12px rgba(0,0,0,.4); z-index: 20; }
 
-/* Yeni kitap: şablon seçici */
+/* New book: template picker */
 .modal.wide { width: min(720px, 94vw); max-height: 86vh; display: flex; flex-direction: column; }
 .tpl-scroll { overflow-y: auto; margin-top: 8px; padding-inline-end: 4px; }
 .tpl-group { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 14px 0 6px; }
@@ -276,17 +276,17 @@ main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: r
 .tpl strong { font-size: 13.5px; }
 .tpl span { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
-/* Yazı dilleri: Arap harfli metinler (Arapça, Osmanlıca) için uygun yazı tipi (yalnızca kullanıldığında yüklenir) */
+/* Writing languages: suitable typeface for Arabic-script text (Arabic, Ottoman Turkish), loaded only when used */
 .cm-content:lang(ar), .cm-content:lang(ota-Arab) { font-family: "Noto Naskh Arabic", "Amiri", "Geeza Pro", var(--font-doc); line-height: 2; }
 .cm-content[dir="rtl"] .cm-line { text-align: start; }
 
-/* Yayınla paneli */
+/* Publish panel */
 .pub-url { display: block; margin: 6px 0; word-break: break-all; color: var(--accent-ink); text-decoration: underline; font-size: 13px; }
 textarea.field { resize: vertical; font: inherit; }
 
 .langpick { width: auto; padding: 4px 8px; font-size: 13px; }
 
-/* Yazma modu (tam ekran): yalnızca sayfa; yazılan paragraf net, gerisi silik */
+/* Writing mode (full screen): only the page; the paragraph being written is sharp, the rest faded */
 .zen .titlebar, .zen .toolbar, .zen .status { display: none; }
 .zen .editor-host .cm-scroller { padding-top: 22vh; }
 .zen .cm-line:not(.cm-dim) { color: var(--ink); }

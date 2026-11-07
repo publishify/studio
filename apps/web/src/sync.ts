@@ -31,7 +31,7 @@ export async function refreshAccount(): Promise<void> {
     const st = useStore.getState();
     if (data.user) {
       st.setAccount(data.user);
-      // Başka bir hesabın verisi bu cihazdaysa, yerel kitaplar yeni hesaba yeni kitap olarak yüklenir.
+      // If another account's data is on this device, local books are uploaded to the new account as new books.
       if (st.owner && st.owner !== data.user.id) {
         st.patch((s) => ({ books: s.books.map(detach), deletedBooks: [], owner: data.user!.id }));
       } else if (!st.owner) {
@@ -42,7 +42,7 @@ export async function refreshAccount(): Promise<void> {
       st.setAccount(null);
     }
   } catch {
-    /* çevrimdışı: yerel çalışmaya devam */
+    /* offline: keep working locally */
   }
 }
 
@@ -70,13 +70,13 @@ export async function syncAll(): Promise<void> {
   running = true;
   useStore.setState({ sync: { status: "syncing", last: st.sync.last } });
   try {
-    // 1) başka cihazda/burada silinen kitapları sunucudan kaldır
+    // 1) remove from the server the books deleted on another device/here
     for (const id of useStore.getState().deletedBooks ?? []) {
       const r = await api(`/books/${id}`, { method: "DELETE" });
       if (r.status === 401) throw new Error("auth");
       if (r.status === 200) useStore.getState().patch((s) => ({ deletedBooks: (s.deletedBooks ?? []).filter((x) => x !== id) }));
     }
-    // 2) sunucudaki, burada olmayan kitapları getir
+    // 2) fetch books that are on the server but not here
     const list = await api<{ books: { id: string; title: string; author: string }[] }>("/books");
     if (list.status === 401) throw new Error("auth");
     const known = new Set(useStore.getState().books.map((b) => b.id));
@@ -87,7 +87,7 @@ export async function syncAll(): Promise<void> {
         books: [...s.books, ...fresh.map((b): Book => ({ id: b.id, title: b.title, author: b.author, created: Date.now(), items: [], activeId: "", remote: true, cursor: 0 }))],
       }));
     }
-    // 3) her kitabı eşitle
+    // 3) sync each book
     for (const b of useStore.getState().books) await syncBook(b.id);
     useStore.setState({ sync: { status: "idle", last: Date.now() } });
   } catch (e) {
@@ -119,7 +119,7 @@ async function syncBook(bookId: string): Promise<void> {
     body: { cursor: book.cursor ?? 0, ...(sendMeta ? { meta: sentMeta } : {}), ...(sendOrder ? { order: sentOrder } : {}), items },
   });
   if (res.status === 401) throw new Error("auth");
-  if (res.status === 410) return; // başka cihazda silinmiş kitap: yerel kopya silinmez
+  if (res.status === 410) return; // book deleted on another device: the local copy is not deleted
   if (res.status !== 200) throw new Error("sync");
   const out = res.data;
   const conflictIds = new Set(out.conflicts.map((c) => c.id));
@@ -130,7 +130,7 @@ async function syncBook(bookId: string): Promise<void> {
       if (b.id !== bookId) return b;
       let list = b.items.slice();
 
-      // gönderdiklerimizin sonucu
+      // result of what we sent
       list = list.map((i) => {
         const p = pushed.get(i.id);
         if (!p || out.accepted[i.id] === undefined) return i;
@@ -157,12 +157,12 @@ async function syncBook(bookId: string): Promise<void> {
         else list.push(next);
       }
 
-      // sıra
+      // order
       if (out.order && !b.orderDirty) {
         const pos = new Map(out.order.map((id, n) => [id, n] as const));
         list.sort((a, c) => (pos.get(a.id) ?? 1e9) - (pos.get(c.id) ?? 1e9));
       }
-      // en az bir bölüm olsun ve etkin bölüm geçerli kalsın
+      // keep at least one chapter and keep the active chapter valid
       if (!list.some((i) => i.kind === "chapter" && !i.trashed)) list.push({ id: crypto.randomUUID(), kind: "chapter", title: "", body: "# \n\n", updated: Date.now(), versions: [], dirty: true });
       const activeId = list.some((i) => i.id === b.activeId && i.kind === "chapter" && !i.trashed) ? b.activeId : (list.find((i) => i.kind === "chapter" && !i.trashed)?.id ?? "");
 
@@ -184,7 +184,7 @@ async function syncBook(bookId: string): Promise<void> {
   });
 }
 
-/** Uygulama başlangıcında bir kez çağrılır: hesabı yükler, değişiklikleri dinler. */
+/** Called once at app start: loads the account and listens for changes. */
 export function startSync(): void {
   void refreshAccount();
   let last = useStore.getState().books;

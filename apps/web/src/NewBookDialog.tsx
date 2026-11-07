@@ -3,7 +3,7 @@ import { type Lang, t } from "./i18n";
 import { type Template, templateGroups, templates } from "./templates";
 import { useStore } from "./store";
 
-/** Yeni kitap: kategoriye göre örnek şablon seçimi. */
+/** New book: pick an example template by category. */
 export function NewBookDialog({ lang, onClose }: { lang: Lang; onClose: () => void }) {
   const addBook = useStore((s) => s.addBook);
   const li = lang === "tr" ? 0 : 1;

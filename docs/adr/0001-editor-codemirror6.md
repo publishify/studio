@@ -1,19 +1,19 @@
-# ADR-0001: Editör çekirdeği CodeMirror 6
+# ADR-0001: Editor core: CodeMirror 6
 
-- **Durum:** kabul edildi
-- **Tarih:** 2026-11-06
+- **Status:** accepted
+- **Date:** 2026-11-06
 
-## Bağlam
-Metin her zaman düz Markdown kalmalı; 200 bin kelimelik kitaplarda akıcı olmalı; kurul notları metne dokunmadan işaretlenebilmeli; mobil, Türkçe klavye ve yazım denetimi çalışmalı.
+## Context
+Text must always stay plain Markdown; the editor must stay smooth on 200,000-word books; editorial-board notes must be markable without touching the text; and mobile, the Turkish keyboard and spell-check must work.
 
-## Karar
-CodeMirror 6 + Markdown dili, Obsidian tarzı canlı önizleme (imleç dışındaki işaretler gizli).
+## Decision
+CodeMirror 6 with the Markdown language and an Obsidian-style live preview (marks away from the cursor are hidden).
 
-## Değerlendirilen seçenekler
-- ProseMirror/TipTap — en olgun WYSIWYG; Markdown gidiş-dönüşünde kayıp riski (OpenWriter'ın `browser-write-fidelity` ADR'si).
-- Lexical — küçük ve hızlı; Markdown dönüşümü yine kayıplı.
-- Milkdown — Markdown öncelikli WYSIWYG; küçük topluluk.
-- Monaco — kod editörü, ağır, mobilde zayıf.
+## Options considered
+- ProseMirror/TipTap — the most mature WYSIWYG; risk of loss in Markdown round trips (see OpenWriter's `browser-write-fidelity` ADR).
+- Lexical — small and fast; Markdown conversion is lossy as well.
+- Milkdown — Markdown-first WYSIWYG; small community.
+- Monaco — a code editor: heavy and weak on mobile.
 
-## Sonuçlar
-Dönüşüm kaybı yok; notlar dekorasyon olarak çizilir. Tablo/görsel gibi zengin öğeler ek iş ister.
+## Consequences
+No conversion loss; notes are drawn as decorations. Rich elements such as tables and images need extra work.

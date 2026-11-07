@@ -5,7 +5,7 @@ import { type BookLang, bookLangOf, bookLangs } from "./languages";
 import { useBlobUrl } from "./media";
 import { type Genre, useStore } from "./store";
 
-/** Kitap adı ve yazar düzenleme. */
+/** Edit book title and author. */
 export function BookDialog({ bookId, lang, onClose }: { bookId: string; lang: Lang; onClose: () => void }) {
   const book = useStore((s) => s.books.find((b) => b.id === bookId));
   const updateBook = useStore((s) => s.updateBook);
