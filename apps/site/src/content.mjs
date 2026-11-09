@@ -96,8 +96,8 @@ export const pages = [
     <p class="eyebrow">${h.t("Yazar-yayıncının evi", "A home for author-publishers")}</p>
     <h1>${h.t("Yaz. Düzenle. <em>Yayınla.</em>", "Write. Edit. <em>Publish.</em>")}</h1>
     <p class="lede">${h.t(
-      "Publishify, satılacak bir ürün olsun diye değil, yazara iyi bir deneyim sunmak için var. Özellikle kendi kitabını yayınlayan yazarların işini ve hayatını kolaylaştıracak ne varsa eklemeye çalışıyoruz.",
-      "Publishify exists not to be one more product, but to give writers a genuinely good experience. Above all for authors who publish their own books, we keep adding whatever makes their work and their lives easier.")}</p>
+      "Publishify bir ürün değil; yazarlara iyi bir kullanıcı deneyimi sunar. Özellikle yazar-yayıncıların hayatını kolaylaştırmak için kurulmuştur.",
+      "Publishify isn't a product. It offers writers a good experience, and it was built above all to make life easier for author-publishers.")}</p>
     <p class="cta"><a class="btn primary" href="/studio/">${h.t("Yazmaya başla — ücretsiz", "Start writing — it's free")}</a><a class="btn ghost" href="${h.href("masthead")}">${h.t("Yayın kurulunu gör", "Meet the editorial board")}</a></p>
     <ul class="ticks"><li>${h.t("Hesap gerekmez", "No account needed")}</li><li>${h.t("Dosyaların Drive'ında, kimseyle paylaşılmaz", "Your files live in your Drive, shared with no one")}</li><li>${h.t("Word, PDF, ePUB, MD: istediğin biçimde indir", "Download as Word, PDF, ePUB or Markdown")}</li></ul>
   </div>
@@ -127,13 +127,13 @@ export const pages = [
   <div class="grid g3">
     <div class="card"><span class="ic">01</span><h3>${h.t("Yaz", "Write")}</h3><p>${h.t("Studio'da canlı Markdown, kısım › bölüm › sahne yapısı, sesle yazma ve sürüm geçmişi. Ücretsiz, hesap gerekmez.", "In Studio: live Markdown, part › chapter › scene structure, dictation and version history. Free, with no account needed.")}</p><p style="margin-top:12px"><a href="${h.href("features")}">${h.t("Yazmak için →", "Writing →")}</a></p></div>
     <div class="card"><span class="ic">02</span><h3>${h.t("Düzenle", "Edit")}</h3><p>${h.t("Masthead yayın kurulu kitabını okur; kanıta dayalı notlar verir, metnine dokunmaz. Erken erişimde.", "The Masthead editorial board reads your book and gives evidence-based notes without touching your text. In early access.")}</p><p style="margin-top:12px"><a href="${h.href("masthead")}">${h.t("Düzenlemek için →", "Editing →")}</a></p></div>
-    <div class="card"><span class="ic">03</span><h3>${h.t("Yayınla", "Publish")}</h3><p>${h.t("Word, PDF, ePUB ya da tek tıkla herkese açık, arama motorlarına hazır bir sayfa. Taslağın sende kalır.", "Word, PDF, ePUB, or one click to a public page ready for search engines. Your draft stays with you.")}</p><p style="margin-top:12px"><a href="${h.href("publishing")}">${h.t("Yayınlamak için →", "Publishing →")}</a></p></div>
+    <div class="card"><span class="ic">03</span><h3>${h.t("Yayınla", "Publish")}</h3><p>${h.t("Tek tıkla herkese açık bir okuma sayfası yap ya da kitabını e-kitap (ePUB), Word ve PDF olarak indir. Taslağın sende kalır.", "Make a public reading page in one click, or download your book as an e-book (ePUB), Word or PDF. Your draft stays with you.")}</p><p style="margin-top:12px"><a href="${h.href("publishing")}">${h.t("Yayınlamak için →", "Publishing →")}</a></p></div>
   </div>
-  <p class="note" style="margin-top:28px">${h.t("Studio'dan Word olarak indirdiğin kitabı Masthead'e okutabilirsin; başka bir yerde yazdıysan da okur. İkisini tek düğmeyle buluşturmak yolda.", "You can download your book from Studio as Word and have Masthead read it; it reads books written elsewhere too. Bringing the two together in one click is on the way.")}</p>
+  <p class="note" style="margin-top:28px">${h.t("Studio'dan Word olarak indirdiğin kitabı Masthead'e okutabilirsin; başka bir yerde yazdıysan da okur. İkisini tek düğmeyle buluşturmak yolda. Yayınla derken web sayfası ve e-kitabı kastediyoruz; matbaa baskısı ve mağaza dağıtımı yapmıyoruz.", "You can download your book from Studio as Word and have Masthead read it; it reads books written elsewhere too. Bringing the two together in one click is on the way. By publish we mean a web page and an e-book; we do not handle printing or store distribution.")}</p>
 </div></section>
 
 <section class="s alt" aria-labelledby="why"><div class="wrap">
-  <div class="head"><p class="eyebrow">${h.t("Neden varız", "Why we are here")}</p><h2 id="why">${h.t("Ürün değil, yazara iyi gelen bir deneyim.", "Not a product. An experience that is good to writers.")}</h2><p>${h.t("Yeni bir özelliği eklerken tek bir soru soruyoruz: Bu, kendi kitabını yayınlayan bir yazarın omzundan bir işi alıyor mu?", "Before adding anything, we ask one question: does this take a job off the shoulders of an author publishing their own book?")}</p></div>
+  <div class="head"><p class="eyebrow">${h.t("Neden varız", "Why we are here")}</p><h2 id="why">${h.t("Ürün değil, yazarlar için iyi bir deneyim.", "Not a product. A good experience for writers.")}</h2><p>${h.t("Yeni bir özelliği eklerken tek bir soru soruyoruz: Bu, kendi kitabını yayınlayan bir yazarın omzundan bir işi alıyor mu?", "Before adding anything, we ask one question: does this take a job off the shoulders of an author publishing their own book?")}</p></div>
   <div class="grid g3">
     <div class="card"><h3>${h.t("Kitabın sende kalır", "Your book stays yours")}</h3><p>${h.t("Dosyaların sende ya da kendi Drive'ında durur; eşitlemeyi sen seçersin. İstediğin an indirip götürürsün.", "Your files stay with you or in your own Drive, and syncing is your choice. Take them with you whenever you like.")}</p></div>
     <div class="card"><h3>${h.t("Karar senindir", "The decisions are yours")}</h3><p>${h.t("Yapay zekâ önerir, yeniden yazmaz ve hüküm vermez. Metnini yalnızca sen değiştirirsin.", "AI suggests. It does not rewrite or pass verdicts. Only you change your text.")}</p></div>
@@ -282,6 +282,7 @@ ${LANGS.map((x) => `<tr><td><b>${x.name}</b><br><span class="${x.rtl ? "rtl" : "
     body: (L, h) => `
 <div class="wrap">${h.crumbs([["home"], ["publishing"]])}
 <header class="page-head"><h1>${h.t("Yazını yayınla", "Publish your writing")}</h1><p class="lede">${h.t("Yazdığın şey yalnızca bir dosya olmak zorunda değil. Publishify'da bir tıkla herkesin okuyabileceği bir sayfa olur.", "What you write does not have to stay a file. In Publishify it becomes a page anyone can read, in one click.")}</p></header>
+<p class="note">${h.t("Publishify'da yayınlamak, kitabını web'de herkese açmak ya da e-kitap ve dosya olarak hazırlamak demektir. Matbaa baskısı ve mağazalara dağıtım yapmıyoruz.", "On Publishify, publishing means putting your book on the web or preparing it as an e-book and files. We do not handle printing or distribution to stores.")}</p>
 <div class="split">
 <div class="prose">
 <h2>${h.t("Nasıl çalışır", "How it works")}</h2>
