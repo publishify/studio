@@ -1,4 +1,6 @@
 // Tanıtım sitesi içeriği (Türkçe + İngilizce). Her iddia gerçek özelliklerden gelir; "yakında" denenler açıkça öyle yazılır.
+import { BLOG } from "./blog.mjs";
+
 // Not: Metinler hem sayfalara hem llms.txt'ye aynı veriden girer ("görünen metin = yapısal veri").
 
 export const SITE = "https://publishify.app";
@@ -378,3 +380,5 @@ ${h.shot("published-dark", h.t("Yayınlanmış bir hikâye sayfası", "A publish
 <p class="cta"><a class="btn primary" href="/studio/">${h.t("Studio'yu aç", "Open Studio")}</a></p></div>`,
   },
 ];
+
+pages.push(...BLOG);

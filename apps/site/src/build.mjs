@@ -24,8 +24,9 @@ const dict = {
   tr: { nav: "Ana gezinme", menu: "Menü", skip: "İçeriğe geç", studio: "Yazmaya başla", switchTo: "EN", crumbs: "Sayfa yolu", product: "Yazar için", help: "Yardım", language: "Dil", rights: "Yazar-yayıncının evi.", openStudio: "Studio'yu aç", llms: "Yapay zekâ için özet" },
   en: { nav: "Main navigation", menu: "Menu", skip: "Skip to content", studio: "Start writing", switchTo: "TR", crumbs: "Breadcrumb", product: "For authors", help: "Help", language: "Language", rights: "A home for author-publishers.", openStudio: "Open Studio", llms: "Summary for AI" },
 };
-const navIds = ["features", "masthead", "compare", "faq"];
+const navIds = ["features", "masthead", "blog", "compare", "faq"];
 const navLabel = { features: { tr: "Studio", en: "Studio" }, masthead: { tr: "Masthead", en: "Masthead" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
+for (const p of pages) if (p.label) navLabel[p.id] = p.label;
 
 function helpers(L, page) {
   const t = (tr, en) => (L === "tr" ? tr : en);
@@ -40,6 +41,7 @@ function helpers(L, page) {
     langChips: () => LANGS.map((x) => `<span class="chip"><b>${x.name}</b>${x.rtl ? `<span class="rtl" lang="ar" dir="rtl">${x.native}</span>` : x.name === x.native ? "" : `<span>${x.native}</span>`}</span>`).join(""),
     themes: () => THEMES.map((x) => `<div class="sw" role="listitem"><i style="background:${x.bg};color:${x.ink}">Aa</i>${x.name[L]}</div>`).join(""),
     faq: (n) => FAQ.slice(0, n).map((f) => `<details class="q"><summary>${f.q[L]}</summary><div class="a">${f.a[L]}</div></details>`).join(""),
+    navName: (id) => navLabel[id][L],
     crumbs: (ids) => `<nav class="crumbs" aria-label="${dict[L].crumbs}">${ids.map(([id], i) => (i === ids.length - 1 ? `<span aria-current="page">${navLabel[id][L]}</span>` : `<a href="${slugOf(id, L)}">${navLabel[id][L]}</a> › `)).join("")}</nav>`,
   };
 }
@@ -60,7 +62,9 @@ function jsonLd(L, page) {
   const wp = { "@type": "WebPage", "@id": `${SITE}${page.slug[L]}#page`, url: urlOf(page.id, L), name: page.title[L], description: page.desc[L], inLanguage: L, isPartOf: { "@id": `${SITE}/#website` } };
   out.push(wp);
   if (page.schema?.includes("faq")) out.push({ "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q[L], acceptedAnswer: { "@type": "Answer", text: f.a[L] } })) });
-  if (page.schema?.includes("crumbs")) out.push({ "@type": "BreadcrumbList", itemListElement: [["home"], [page.id]].map(([id], i) => ({ "@type": "ListItem", position: i + 1, name: navLabel[id][L], item: urlOf(id, L) })) });
+  if (page.article) out.push({ "@type": "Article", "@id": `${SITE}${page.slug[L]}#article`, headline: page.h1?.[L] ?? page.title[L], description: page.desc[L], inLanguage: L, datePublished: page.article, dateModified: page.article, author: { "@id": `${SITE}/#org` }, publisher: org, mainEntityOfPage: { "@id": `${SITE}${page.slug[L]}#page` }, image: `${SITE}/img/${L === "tr" ? "og.png" : "og-en.png"}` });
+  if (page.qa) out.push({ "@type": "FAQPage", mainEntity: page.qa.map((f) => ({ "@type": "Question", name: f.q[L], acceptedAnswer: { "@type": "Answer", text: f.a[L] } })) });
+  if (page.schema?.includes("crumbs")) out.push({ "@type": "BreadcrumbList", itemListElement: [["home"], ...(page.parent ? [[page.parent]] : []), [page.id]].map(([id], i) => ({ "@type": "ListItem", position: i + 1, name: navLabel[id][L], item: urlOf(id, L) })) });
   return JSON.stringify({ "@context": "https://schema.org", "@graph": out }).replace(/</g, "\\u003c");
 }
 
@@ -95,7 +99,7 @@ ${preload}<style>${css}</style>
 <footer class="foot"><div class="wrap"><div class="cols">
 <div><span class="brand" aria-hidden="true">${logo}</span><p>${d.rights}</p></div>
 <div><h4>${d.product}</h4><a href="/studio/">${d.openStudio}</a><a href="${slugOf("features", L)}">${navLabel.features[L]}</a><a href="${slugOf("masthead", L)}">${navLabel.masthead[L]}</a><a href="${slugOf("languages", L)}">${navLabel.languages[L]}</a><a href="${slugOf("publishing", L)}">${navLabel.publishing[L]}</a></div>
-<div><h4>${d.help}</h4><a href="${slugOf("compare", L)}">${navLabel.compare[L]}</a><a href="${slugOf("faq", L)}">${navLabel.faq[L]}</a><a href="/llms.txt">${d.llms}</a></div>
+<div><h4>${d.help}</h4><a href="${slugOf("blog", L)}">${navLabel.blog[L]}</a><a href="${slugOf("compare", L)}">${navLabel.compare[L]}</a><a href="${slugOf("faq", L)}">${navLabel.faq[L]}</a><a href="/llms.txt">${d.llms}</a></div>
 <div><h4>${d.language}</h4><a href="${slugOf(page.id, "tr")}" hreflang="tr" lang="tr">Türkçe</a><a href="${slugOf(page.id, "en")}" hreflang="en" lang="en">English</a></div>
 </div><p class="small" style="margin-top:28px">© ${new Date().getFullYear()} Publishify</p></div></footer>
 </body></html>`;
