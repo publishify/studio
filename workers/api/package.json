@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "typecheck": "tsc --noEmit",
-    "deploy": "pnpm --filter @publishify/web build && pnpm --filter @publishify/site build && wrangler deploy",
+    "deploy": "pnpm --filter @publishify/web build && SITE_OUT=../../apps/web/dist node ../../../site/src/build.mjs && wrangler deploy",
     "test": "vitest run"
   },
   "dependencies": {

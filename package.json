@@ -7,7 +7,7 @@
   "packageManager": "pnpm@12.18.0",
   "scripts": {
     "dev": "pnpm --filter @publishify/web dev",
-    "build": "pnpm --filter @publishify/web build && pnpm --filter @publishify/site build",
+    "build": "pnpm --filter @publishify/web build",
     "deploy": "pnpm --filter @publishify/api deploy",
     "dev:api": "pnpm --filter @publishify/api dev",
     "test": "pnpm --filter @publishify/web test && pnpm --filter @publishify/api test"

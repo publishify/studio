@@ -30,7 +30,7 @@
 </p>
 
 <p align="center">
-  <img src="apps/site/public/img/editor-light-1600.jpg" alt="The Publishify Studio editor: a chapter list on the left, a calm page of live Markdown in the middle" width="900">
+  <img src="https://publishify.app/img/editor-light-1600.jpg" alt="The Publishify Studio editor: a chapter list on the left, a calm page of live Markdown in the middle" width="900">
 </p>
 
 ---
@@ -80,14 +80,14 @@ Publishify is released under the [MIT license](LICENSE). Your words are never us
 </td>
 <td width="50%" valign="top">
 
-<img src="apps/site/public/img/zen-dark-800.jpg" alt="Full-screen writing mode in the night theme" width="100%">
+<img src="https://publishify.app/img/zen-dark-800.jpg" alt="Full-screen writing mode in the night theme" width="100%">
 
 </td>
 </tr>
 <tr>
 <td valign="top">
 
-<img src="apps/site/public/img/templates-700.jpg" alt="Template picker with novel, short story, poetry, essay and academic templates" width="100%">
+<img src="https://publishify.app/img/templates-700.jpg" alt="Template picker with novel, short story, poetry, essay and academic templates" width="100%">
 
 </td>
 <td valign="top">
@@ -112,14 +112,14 @@ Publishify is released under the [MIT license](LICENSE). Your words are never us
 </td>
 <td valign="top">
 
-<img src="apps/site/public/img/rtl-ar-800.jpg" alt="The editor writing right-to-left in Arabic script" width="100%">
+<img src="https://publishify.app/img/rtl-ar-800.jpg" alt="The editor writing right-to-left in Arabic script" width="100%">
 
 </td>
 </tr>
 <tr>
 <td valign="top">
 
-<img src="apps/site/public/img/published-dark-700.jpg" alt="A published chapter page with a table of contents and share links" width="100%">
+<img src="https://publishify.app/img/published-dark-700.jpg" alt="A published chapter page with a table of contents and share links" width="100%">
 
 </td>
 <td valign="top">
@@ -246,7 +246,6 @@ workers/
 | `pnpm dev:api` | Worker locally (`wrangler dev`) |
 | `pnpm build` | Type-check and build Studio and the site |
 | `pnpm test` | Unit tests (Vitest) for Studio and the API |
-| `pnpm --filter @publishify/site check` | Broken-link and SEO checks for the site |
 
 Code comments, tests, scripts and architecture decision records are written in **English**. Product text (the interface and the marketing site) is available in several languages.
 
