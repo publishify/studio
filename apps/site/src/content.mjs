@@ -87,7 +87,7 @@ export const THEMES = [
 // body(L, h): h = { t(tr,en), img(...), href(id), faq(items) }
 export const pages = [
   {
-    id: "home", slug: { tr: "/", en: "/en/" }, priority: 1.0, schema: ["org", "site", "app"],
+    id: "home", slug: { tr: "/tr/", en: "/" }, priority: 1.0, schema: ["org", "site", "app"],
     title: { tr: "Publishify — yazarlar için sade yazma editörü ve yayın stüdyosu", en: "Publishify — a calm writing editor and publishing studio for authors" },
     desc: { tr: "Romanını, öykünü, denemeni Arapça, Osmanlıca, Türkçe ve daha pek çok dilde yaz. Tarayıcıda çalışır, ücretsiz; dosyaların senin, yayınlamak tek tık.", en: "Write your novel, story or essay in Arabic, Ottoman Turkish, Turkish and more. Browser-based and free; your files stay yours and publishing is one click." },
     body: (L, h) => `
@@ -230,7 +230,7 @@ export const pages = [
   },
 
   {
-    id: "features", slug: { tr: "/ozellikler/", en: "/en/features/" }, priority: 0.9, schema: ["app", "crumbs"],
+    id: "features", slug: { tr: "/tr/ozellikler/", en: "/features/" }, priority: 0.9, schema: ["app", "crumbs"],
     title: { tr: "Özellikler — canlı Markdown, sahne yapısı, sesle yazma | Publishify", en: "Features — live Markdown, scene structure, dictation | Publishify" },
     desc: { tr: "Publishify'ın özellikleri: canlı Markdown, kısım › bölüm › sahne, hazır şablonlar, odak modu, sesle yazma, sürüm geçmişi, kapak, dışa aktarma ve temalar.", en: "Publishify features: live Markdown, part › chapter › scene, templates, focus mode, dictation, version history, covers, export and themes." },
     body: (L, h) => `
@@ -246,7 +246,7 @@ export const pages = [
   },
 
   {
-    id: "languages", slug: { tr: "/diller/", en: "/en/languages/" }, priority: 0.8, schema: ["crumbs"],
+    id: "languages", slug: { tr: "/tr/diller/", en: "/languages/" }, priority: 0.8, schema: ["crumbs"],
     title: { tr: "Diller — Türkçe, Kurmancî, Zazaca, Osmanlıca, Arapça | Publishify", en: "Languages — Turkish, Kurmanji, Zazaki, Ottoman, Arabic | Publishify" },
     desc: { tr: "Publishify'da Türkçe, Kurmancî (Latin), Zazaca, Osmanlıca ve Arapça yazabilirsin; sağdan sola yön, uygun yazı tipleri ve dışa aktarma dahil.", en: "Write in Turkish, Kurmanji (Latin), Zazaki, Ottoman Turkish and Arabic in Publishify, with right-to-left direction, suitable typefaces and exports included." },
     body: (L, h) => `
@@ -269,7 +269,7 @@ ${LANGS.map((x) => `<tr><td><b>${x.name}</b><br><span class="${x.rtl ? "rtl" : "
   },
 
   {
-    id: "publishing", slug: { tr: "/yayinla/", en: "/en/publishing/" }, priority: 0.8, schema: ["crumbs"],
+    id: "publishing", slug: { tr: "/tr/yayinla/", en: "/publishing/" }, priority: 0.8, schema: ["crumbs"],
     title: { tr: "Yayınla — yazını bir tıkla herkese açık sayfa yap | Publishify", en: "Publish your writing as a public page in one click | Publishify" },
     desc: { tr: "Blog yazısı, deneme, hikâye, makale ya da kitap: Publishify ile bir tıkla hızlı, güvenli, arama motorlarına hazır bir sayfada yayınla.", en: "A blog post, essay, story, article or book: publish it with Publishify in one click on a fast, secure, search-ready page." },
     body: (L, h) => `
@@ -292,7 +292,33 @@ ${h.shot("published-dark", h.t("Yayınlanmış bir hikâye sayfası", "A publish
   },
 
   {
-    id: "compare", slug: { tr: "/karsilastirma/", en: "/en/compare/" }, priority: 0.7, schema: ["crumbs"],
+    id: "masthead", slug: { tr: "/tr/masthead/", en: "/masthead/" }, priority: 0.9, schema: ["crumbs"],
+    title: { tr: "Masthead: yapay zekâ yayın kurulu | Publishify", en: "Masthead: your AI editorial board | Publishify" },
+    desc: { tr: "Kitabını bir yayınevi kadrosu gibi okuyan, kanıta dayalı notlar veren ve metnine dokunmayan yapay zekâ yayın kurulu. Erken erişimde.", en: "An AI editorial board that reads your book like a publishing house, gives evidence-based notes and never touches your text. In early access." },
+    body: (L, h) => `
+<div class="wrap">${h.crumbs([["home"], ["masthead"]])}
+<header class="page-head"><span class="eyebrow">${h.t("Erken erişim", "Early access")}</span><h1>${h.t("Kitabının yayın kurulu", "An editorial board for your book")}</h1><p class="lede">${h.t("Publishify Masthead, kitabını bir yayınevi kadrosu gibi okur; kanıta dayalı notlar verir, yolculuğun nerede durduğunu gösterir. Metnine dokunmaz, karar senindir.", "Publishify Masthead reads your book like a publishing house staff, gives evidence-based notes and shows where the journey stands. It never touches your text, and the decisions stay yours.")}</p>
+<p class="cta"><a class="btn primary" href="mailto:info@publishify.app?subject=Masthead">${h.t("Erken erişim iste", "Request early access")}</a><a class="btn ghost" href="https://github.com/publishify/masthead-plugin">${h.t("Eklentiyi incele", "View the plugin")}</a></p></header>
+<figure style="margin:0 0 2.5rem"><img src="/img/masthead-night-press-${L}.svg" width="680" height="580" style="width:100%;height:auto;max-width:860px;display:block;margin:0 auto" alt="${h.t("Gece yayınevi: yedi merhaleli tek halkanın altında çalışan yapay zekâ editörleri ve betikler. Örnek veridir.", "The night press: AI editors and scripts at work beneath a single ring of seven stages. Sample data.")}"></figure>
+<div class="prose"><h2>${h.t("Masthead ne yapar?", "What Masthead does")}</h2></div>
+<div class="grid"><div class="card"><h3>${h.t("Bölüm bölüm editör okuması", "A section-by-section edit")}</h3><p>${h.t("Editör her bölümü bir kez okur: yapı, tempo, dil ve imla notları çıkarır. Yazar için özet hazırlar.", "The Editor reads each section once and returns notes on structure, pacing, language and spelling, with a summary kept on your computer.")}</p></div><div class="card"><h3>${h.t("Kitap boyunca tutarlılık", "Continuity across the book")}</h3><p>${h.t("Denetçi yaş, tarih, mekân, nesne ve bilgi çelişkilerini iki yerden kanıtla gösterir.", "The Auditor shows contradictions in age, date, place, objects and knowledge, each with evidence from two places.")}</p></div><div class="card"><h3>${h.t("Okur tepkisi", "Reader response")}</h3><p>${h.t("Okur Paneli, seçili bir okur profilinin nerede merak ettiğini, nerede uzaklaştığını canlandırır. Bu bir simülasyondur.", "The Reader Panel simulates where a chosen reader profile grew curious and where they drifted away. It is a simulation.")}</p></div><div class="card"><h3>${h.t("Görsel dashboard", "A visual dashboard")}</h3><p>${h.t("Tek bakışta yedi merhale, en fazla üç ana karar, bölüm bölüm durum ve bütün notlar. İnternetsiz açılır, yazdırılabilir.", "Seven stages at a glance, up to three main decisions, section status and every note. It opens offline and can be printed.")}</p></div></div>
+<div class="prose"><h2>${h.t("Yazarın işini nasıl kolaylaştırır?", "How it makes the work easier")}</h2></div>
+<div class="grid"><div class="card"><h3>${h.t("Metne dokunmaz", "It never touches your text")}</h3><p>${h.t("Masthead yeniden yazmaz, hüküm vermez, “yayına hazır” demez. Kararı yalnızca yazar verir.", "Masthead does not rewrite, does not issue verdicts and never says “ready to publish”. Every decision stays with the author.")}</p></div><div class="card"><h3>${h.t("Kanıtsız not olmaz", "Notes come with evidence")}</h3><p>${h.t("Her not kitaptan bir alıntıya bağlıdır. Alıntı kitapta birebir bulunamazsa not “doğrulanamadı” diye işaretlenir.", "Every note is tied to a quote from your book. If a quote cannot be found word for word, the note is marked as unverified.")}</p></div><div class="card"><h3>${h.t("Değişmeyeni yeniden okumaz", "Unchanged sections are not read again")}</h3><p>${h.t("Kitabı düzeltip tekrar çalıştırdığında yalnızca değişen bölümler okunur.", "When you revise and run it again, only the sections that changed are read.")}</p></div><div class="card"><h3>${h.t("Rutin işler tokensız", "Routine work uses no tokens")}</h3><p>${h.t("Ölçüm, alıntı kontrolü, sık imla hataları, karne ve dashboard betikle yapılır; yapay zekâ yalnızca okuma gereken yerde çalışır.", "Measuring, quote checks, frequent spelling errors, the scorecard and the dashboard are done by scripts. AI runs only where reading is needed.")}</p></div></div>
+<div class="prose"><h2>${h.t("Dünya standartlarında altyapı", "World-class infrastructure")}</h2><p>${h.t("Masthead'i yazarın kitabını ve verisini merkeze alarak kurduk.", "We built Masthead around the author's book and data.")}</p></div>
+<div class="grid"><div class="card"><h3>${h.t("Kendi Claude hesabınla", "Runs on your own Claude account")}</h3><p>${h.t("Kitabı okuyan yapay zekâ senin Claude hesabında çalışır. Publishify modeli sunucusunda çalıştırmaz.", "The AI that reads your book runs on your own Claude account. Publishify runs no model on its servers.")}</p></div><div class="card"><h3>${h.t("Kitabın sunucuya gitmez", "Your book stays with you")}</h3><p>${h.t("Kitabın tam metni ve bölüm özetleri bilgisayarında kalır. Sunucuya yalnızca editör notları, en fazla 25 kelimelik alıntılar ve sayılar gider.", "Your full text and section summaries stay on your computer. Only editorial notes, quotes of up to 25 words and counts reach the server.")}</p></div><div class="card"><h3>${h.t("Küresel altyapı", "Global infrastructure")}</h3><p>${h.t("Merkez, Cloudflare'in küresel ağında çalışır; her hesabın verisi kendi ayrı alanında tutulur.", "The service runs on Cloudflare's global network, and each account's data is kept in its own separate store.")}</p></div><div class="card"><h3>${h.t("Standart güvenlik", "Standard security")}</h3><p>${h.t("Google ile giriş, OAuth ve PKCE ile yapılır. Veri silme, tek kullanımlık ve süreli bir onay bağlantısıyla çalışır.", "Sign-in with Google uses OAuth and PKCE. Deleting data takes a single-use, time-limited confirmation link.")}</p></div></div>
+<div class="prose"><h2>${h.t("Neleri okur?", "What it reads")}</h2><p>${h.t("Ana odağımız anlatı türleridir:", "Our main focus is narrative:")}</p></div>
+<div class="chips"><span class="chip"><b>${h.t("Roman", "Novel")}</b></span><span class="chip"><b>${h.t("Novella", "Novella")}</b></span><span class="chip"><b>${h.t("Öykü", "Short story")}</b></span><span class="chip"><b>${h.t("Anı", "Memoir")}</b></span><span class="chip"><b>${h.t("Biyografi", "Biography")}</b></span><span class="chip"><b>${h.t("Oyun", "Play")}</b></span></div>
+<div class="prose"><p>${h.t("Ana işimiz olmasa da beta olarak şunları da destekliyoruz. Yolculuk haritası yalnızca anlatılarda çıkar:", "Although not our main focus, these are also supported in beta. The journey map appears only for narratives:")}</p></div>
+<div class="chips"><span class="chip"><b>${h.t("Makale", "Article")}</b></span><span class="chip"><b>${h.t("Küçürek", "Flash fiction")}</b></span><span class="chip"><b>${h.t("Blog yazısı", "Blog post")}</b></span><span class="chip"><b>${h.t("Deneme", "Essay")}</b></span></div>
+<div class="prose"><h2>${h.t("Yolcunun Yedi Merhalesi", "The Wayfarer's Seven Stages")}</h2><p>${h.t("Masthead bir anlatıyı, Ali Osman Akçaoğlu'nun Dede Korkut, Attâr'ın <em>Mantıku't-Tayr</em>'ı ve tasavvuf edebiyatının yol anlayışını temel alarak geliştirdiği yedi merhalede okur. Kahramanın yolculuğu ile ortak aşamaları paylaşır; farkı, merkeze başarıyı değil derdi koymasıdır.", "Masthead reads a narrative through seven stages developed by Ali Osman Akçaoğlu from the Book of Dede Korkut, Attar's <em>Conference of the Birds</em> and the Sufi understanding of the path. It shares stages with the Hero's Journey; the difference is that its centre is not success but the wayfarer's inner need.")}</p><p><em>${h.t("Yolcu, derdiyle yola çıkar, yedi merhaleden geçer, ocağına değişmiş olarak döner.", "The wayfarer sets out with an inner need, passes through seven stages and returns home changed.")}</em></p></div>
+<div class="grid"><div class="card"><span class="ic">01</span><h3>${h.t("Çağrı", "Call")}</h3><p>${h.t("Eksik olan ne, yolcu çağrıya nasıl cevap veriyor?", "What is missing, and how does the wayfarer answer the call?")}</p></div><div class="card"><span class="ic">02</span><h3>${h.t("Kılavuz", "Guide")}</h3><p>${h.t("Kim yol gösteriyor, ne hazırlanıyor?", "Who shows the way, and what is being prepared?")}</p></div><div class="card"><span class="ic">03</span><h3>${h.t("Eşik", "Threshold")}</h3><p>${h.t("Neyi geride bırakıyor, geri dönüş neden yok?", "What is left behind, and why is there no way back?")}</p></div><div class="card"><span class="ic">04</span><h3>${h.t("Sınav", "Trial")}</h3><p>${h.t("Yol onu nasıl sınıyor, yeni dünyanın kuralı ne?", "How does the road test them, and what is the rule of the new world?")}</p></div><div class="card"><span class="ic">05</span><h3>${h.t("Uyanış", "Awakening")}</h3><p>${h.t("Neyi yakıp neye uyandı?", "What burned away, and what did they wake to?")}</p></div><div class="card"><span class="ic">06</span><h3>${h.t("Ödül", "Reward")}</h3><p>${h.t("Bedeli ne, artık kim oldu?", "What was the price, and who have they become?")}</p></div><div class="card"><span class="ic">07</span><h3>${h.t("Dönüş", "Return")}</h3><p>${h.t("Ocağa ne getiriyor, ocak değişti mi?", "What do they bring home, and has home changed?")}</p></div></div>
+<div class="prose"><p>${h.t("Merhaleler bir denetim listesi değil, haritadır. Bir merhalenin olmaması kusur sayılmaz.", "The stages are a map, not a checklist. A stage that is absent is not a fault.")}</p></div>
+<div class="prose"><h2>${h.t("Nasıl kullanılır?", "How to use it")}</h2><p>${h.t("Masthead bir Claude Code eklentisidir; bir Claude hesabı gerekir. Erken erişim sürecinde lisans, Google hesabının e-postasına tanımlanır.", "Masthead is a Claude Code plugin and needs a Claude account. During early access, a licence is linked to the email of your Google account.")}</p></div>
+<p class="cta"><a class="btn primary" href="mailto:info@publishify.app?subject=Masthead">${h.t("Erken erişim iste", "Request early access")}</a><a class="btn ghost" href="/studio/">${h.t("Studio'yu aç", "Open Studio")}</a></p></div>`,
+  },
+
+  {
+    id: "compare", slug: { tr: "/tr/karsilastirma/", en: "/compare/" }, priority: 0.7, schema: ["crumbs"],
     title: { tr: "Publishify, Ulysses ve Scrivener karşılaştırması", en: "Publishify vs Ulysses vs Scrivener" },
     desc: { tr: "Publishify, Ulysses ve Scrivener'ı çalıştıkları cihazlar, ödeme modeli ve kurulum açısından karşılaştır; hangisi kime uygun?", en: "Compare Publishify, Ulysses and Scrivener by devices, pricing model and setup, and see which one suits whom." },
     body: (L, h) => `
@@ -314,7 +340,7 @@ ${h.shot("published-dark", h.t("Yayınlanmış bir hikâye sayfası", "A publish
   },
 
   {
-    id: "faq", slug: { tr: "/sss/", en: "/en/faq/" }, priority: 0.7, schema: ["faq", "crumbs"],
+    id: "faq", slug: { tr: "/tr/sss/", en: "/faq/" }, priority: 0.7, schema: ["faq", "crumbs"],
     title: { tr: "Sık sorulan sorular | Publishify", en: "Frequently asked questions | Publishify" },
     desc: { tr: "Publishify hakkında sık sorulanlar: ücret, hesap, dosyalar, diller, yapay zekâ, yayınlama, güvenlik ve Ulysses ile Scrivener'dan farkı.", en: "Frequently asked questions about Publishify: pricing, accounts, files, languages, AI, publishing, security and how it differs from Ulysses and Scrivener." },
     body: (L, h) => `

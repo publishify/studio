@@ -24,8 +24,8 @@ const dict = {
   tr: { nav: "Ana gezinme", menu: "Menü", skip: "İçeriğe geç", studio: "Studio", switchTo: "EN", crumbs: "Sayfa yolu", product: "Ürün", help: "Yardım", language: "Dil", rights: "Bağımsız yazarlar için yazma stüdyosu.", openStudio: "Studio'yu aç", llms: "Yapay zekâ için özet" },
   en: { nav: "Main navigation", menu: "Menu", skip: "Skip to content", studio: "Studio", switchTo: "TR", crumbs: "Breadcrumb", product: "Product", help: "Help", language: "Language", rights: "A writing studio for independent authors.", openStudio: "Open Studio", llms: "Summary for AI" },
 };
-const navIds = ["features", "languages", "publishing", "compare", "faq"];
-const navLabel = { features: { tr: "Özellikler", en: "Features" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
+const navIds = ["features", "masthead", "languages", "publishing", "compare", "faq"];
+const navLabel = { features: { tr: "Özellikler", en: "Features" }, masthead: { tr: "Masthead", en: "Masthead" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
 
 function helpers(L, page) {
   const t = (tr, en) => (L === "tr" ? tr : en);
@@ -67,7 +67,7 @@ function jsonLd(L, page) {
 function layout(L, page, bodyHtml) {
   const d = dict[L], O = other(L);
   const canonical = urlOf(page.id, L);
-  const alt = LANG_KEYS.map((k) => `<link rel="alternate" hreflang="${k}" href="${urlOf(page.id, k)}">`).join("") + `<link rel="alternate" hreflang="x-default" href="${urlOf(page.id, "tr")}">`;
+  const alt = LANG_KEYS.map((k) => `<link rel="alternate" hreflang="${k}" href="${urlOf(page.id, k)}">`).join("") + `<link rel="alternate" hreflang="x-default" href="${urlOf(page.id, "en")}">`;
   const nav = navIds.map((id) => `<a href="${slugOf(id, L)}"${id === page.id ? ' aria-current="page"' : ""}>${navLabel[id][L]}</a>`).join("");
   const preload = page.id === "home" ? `<link rel="preload" as="image" href="/img/editor-dark-1600.jpg" imagesrcset="/img/editor-dark-800.jpg 800w, /img/editor-dark-1600.jpg 1600w" imagesizes="(min-width:980px) 640px, 100vw" fetchpriority="high">` : "";
   return `<!doctype html>
@@ -79,8 +79,8 @@ function layout(L, page, bodyHtml) {
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="color-scheme" content="dark"><meta name="theme-color" content="#0a0f0b">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Publishify"><meta property="og:title" content="${esc(page.title[L])}"><meta property="og:description" content="${esc(page.desc[L])}"><meta property="og:url" content="${canonical}"><meta property="og:locale" content="${L === "tr" ? "tr_TR" : "en_US"}"><meta property="og:locale:alternate" content="${O === "tr" ? "tr_TR" : "en_US"}">
-<meta property="og:image" content="${SITE}/img/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="${L === "tr" ? "Publishify: yazmak için sade bir stüdyo" : "Publishify: a calm studio to write in"}">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(page.title[L])}"><meta name="twitter:description" content="${esc(page.desc[L])}"><meta name="twitter:image" content="${SITE}/img/og.png">
+<meta property="og:image" content="${SITE}/img/${L === "tr" ? "og.png" : "og-en.png"}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="${L === "tr" ? "Publishify: yazmak için sade bir stüdyo" : "Publishify: a calm studio to write in"}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(page.title[L])}"><meta name="twitter:description" content="${esc(page.desc[L])}"><meta name="twitter:image" content="${SITE}/img/${L === "tr" ? "og.png" : "og-en.png"}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="${d.llms}">
 ${preload}<style>${css}</style>
@@ -115,11 +115,16 @@ for (const p of pages) for (const L of LANG_KEYS) {
 }
 // 404
 {
-  const p = { id: "home", slug: { tr: "/", en: "/en/" }, title: { tr: "Sayfa bulunamadı | Publishify", en: "Page not found | Publishify" }, desc: { tr: "Aradığın sayfa bulunamadı.", en: "The page you are looking for was not found." } };
-  const h = layout("tr", p, `<div class="wrap page-head"><h1>Sayfa bulunamadı</h1><p class="lede">Aradığın sayfa taşınmış ya da hiç olmamış olabilir.</p><p class="cta"><a class="btn primary" href="/">Ana sayfaya dön</a><a class="btn ghost" href="/studio/">Studio'yu aç</a></p></div>`)
+  const p = { id: "home", slug: { tr: "/tr/", en: "/" }, title: { tr: "Sayfa bulunamadı | Publishify", en: "Page not found | Publishify" }, desc: { tr: "Aradığın sayfa bulunamadı.", en: "The page you are looking for was not found." } };
+  const h = layout("en", p, `<div class="wrap page-head"><h1>Page not found</h1><p class="lede">This page may have moved or may never have existed.</p><p class="cta"><a class="btn primary" href="/">Home</a><a class="btn ghost" href="/studio/">Open Studio</a></p></div>`)
     .replace('content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"', 'content="noindex"');
   write("404.html", h);
 }
+// Addresses from before English moved to the root keep working.
+write("_redirects", pages.flatMap((p) => {
+  const moved = [[p.slug.tr.replace(/^\/tr/, ""), p.slug.tr], [`/en${p.slug.en}`, p.slug.en]];
+  return moved.filter(([from]) => from !== "/").map(([from, to]) => `${from} ${to} 301`);
+}).join("\n") + "\n");
 copyDir(path.join(root, "public"), OUT);
 
 // ---- sitemap, robots, llms
@@ -170,11 +175,30 @@ ${L === "tr" ? "Sayfalar" : "Pages"}: ${pages.map((p) => urlOf(p.id, L)).join(" 
 `;
 write("llms-full.txt", `${full("tr")}\n---\n\n${full("en")}`);
 
+// The studio's only third parties: Google Fonts, and Google sign-in plus the Drive API for Drive storage.
+// Book text can carry raw HTML (imports, PDF export iframe), so inline and foreign scripts must stay blocked.
+const STUDIO_CSP = [
+  "default-src 'none'",
+  "script-src 'self' https://accounts.google.com/gsi/client",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' blob:",
+  "connect-src 'self' https://www.googleapis.com https://accounts.google.com/gsi/",
+  "frame-src https://accounts.google.com/gsi/",
+  "manifest-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
 write("_headers", `/*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=(self)
   Strict-Transport-Security: max-age=31536000
+/studio/*
+  Content-Security-Policy: ${STUDIO_CSP}
 /img/*
   Cache-Control: public, max-age=31536000, immutable
 /studio/assets/*

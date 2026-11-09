@@ -42,7 +42,7 @@ for (const f of htmlFiles) {
   for (const m of h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) { try { JSON.parse(m[1]); } catch { err(`${rel}: invalid JSON-LD`); } }
   for (const m of h.matchAll(/<link rel="alternate" hreflang="[^"]*" href="(https:\/\/publishify\.app[^"]*)"/g)) if (!exists(m[1].replace("https://publishify.app", ""))) err(`${rel}: missing hreflang target ${m[1]}`);
 }
-for (const f of ["sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt", "_headers", "img/og.png", "favicon.svg", "404.html"]) if (!fs.existsSync(path.join(OUT, f))) err(`missing file: ${f}`);
+for (const f of ["sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt", "_headers", "img/og.png", "img/og-en.png", "favicon.svg", "404.html"]) if (!fs.existsSync(path.join(OUT, f))) err(`missing file: ${f}`);
 
 const bytes = (f) => fs.statSync(path.join(OUT, f)).size;
 const homeKb = (bytes("index.html") / 1024).toFixed(1);
