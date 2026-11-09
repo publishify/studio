@@ -21,11 +21,11 @@ const slugOf = (id, L) => pages.find((p) => p.id === id).slug[L];
 const urlOf = (id, L) => SITE + slugOf(id, L);
 const other = (L) => (L === "tr" ? "en" : "tr");
 const dict = {
-  tr: { nav: "Ana gezinme", menu: "Menü", skip: "İçeriğe geç", studio: "Studio", switchTo: "EN", crumbs: "Sayfa yolu", product: "Ürün", help: "Yardım", language: "Dil", rights: "Bağımsız yazarlar için yazma stüdyosu.", openStudio: "Studio'yu aç", llms: "Yapay zekâ için özet" },
-  en: { nav: "Main navigation", menu: "Menu", skip: "Skip to content", studio: "Studio", switchTo: "TR", crumbs: "Breadcrumb", product: "Product", help: "Help", language: "Language", rights: "A writing studio for independent authors.", openStudio: "Open Studio", llms: "Summary for AI" },
+  tr: { nav: "Ana gezinme", menu: "Menü", skip: "İçeriğe geç", studio: "Yazmaya başla", switchTo: "EN", crumbs: "Sayfa yolu", product: "Yazar için", help: "Yardım", language: "Dil", rights: "Yazar-yayıncının evi.", openStudio: "Studio'yu aç", llms: "Yapay zekâ için özet" },
+  en: { nav: "Main navigation", menu: "Menu", skip: "Skip to content", studio: "Start writing", switchTo: "TR", crumbs: "Breadcrumb", product: "For authors", help: "Help", language: "Language", rights: "A home for author-publishers.", openStudio: "Open Studio", llms: "Summary for AI" },
 };
-const navIds = ["features", "masthead", "languages", "publishing", "compare", "faq"];
-const navLabel = { features: { tr: "Özellikler", en: "Features" }, masthead: { tr: "Masthead", en: "Masthead" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
+const navIds = ["features", "masthead", "publishing", "faq"];
+const navLabel = { features: { tr: "Yaz", en: "Write" }, masthead: { tr: "Düzenle", en: "Edit" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
 
 function helpers(L, page) {
   const t = (tr, en) => (L === "tr" ? tr : en);
@@ -94,7 +94,7 @@ ${preload}<style>${css}</style>
 <main id="main">${bodyHtml}</main>
 <footer class="foot"><div class="wrap"><div class="cols">
 <div><span class="brand" aria-hidden="true">${logo}</span><p>${d.rights}</p></div>
-<div><h4>${d.product}</h4><a href="/studio/">${d.openStudio}</a><a href="${slugOf("features", L)}">${navLabel.features[L]}</a><a href="${slugOf("languages", L)}">${navLabel.languages[L]}</a><a href="${slugOf("publishing", L)}">${navLabel.publishing[L]}</a></div>
+<div><h4>${d.product}</h4><a href="/studio/">${d.openStudio}</a><a href="${slugOf("features", L)}">${navLabel.features[L]}</a><a href="${slugOf("masthead", L)}">${navLabel.masthead[L]}</a><a href="${slugOf("languages", L)}">${navLabel.languages[L]}</a><a href="${slugOf("publishing", L)}">${navLabel.publishing[L]}</a></div>
 <div><h4>${d.help}</h4><a href="${slugOf("compare", L)}">${navLabel.compare[L]}</a><a href="${slugOf("faq", L)}">${navLabel.faq[L]}</a><a href="/llms.txt">${d.llms}</a></div>
 <div><h4>${d.language}</h4><a href="${slugOf(page.id, "tr")}" hreflang="tr" lang="tr">Türkçe</a><a href="${slugOf(page.id, "en")}" hreflang="en" lang="en">English</a></div>
 </div><p class="small" style="margin-top:28px">© ${new Date().getFullYear()} Publishify</p></div></footer>

@@ -88,17 +88,17 @@ export const THEMES = [
 export const pages = [
   {
     id: "home", slug: { tr: "/tr/", en: "/" }, priority: 1.0, schema: ["org", "site", "app"],
-    title: { tr: "Publishify — yazarlar için sade yazma editörü ve yayın stüdyosu", en: "Publishify — a calm writing editor and publishing studio for authors" },
-    desc: { tr: "Romanını, öykünü, denemeni Arapça, Osmanlıca, Türkçe ve daha pek çok dilde yaz. Tarayıcıda çalışır, ücretsiz; dosyaların senin, yayınlamak tek tık.", en: "Write your novel, story or essay in Arabic, Ottoman Turkish, Turkish and more. Browser-based and free; your files stay yours and publishing is one click." },
+    title: { tr: "Publishify — yazar-yayıncılar için yaz, düzenle, yayınla", en: "Publishify — write, edit and publish, for author-publishers" },
+    desc: { tr: "Publishify, kendi kitabını yayınlayan yazarların evi: yaz, yayın kuruluna okut, yayınla. Yazarın işini ve hayatını kolaylaştırmak için kuruldu.", en: "Publishify is a home for author-publishers: write, have an editorial board read your book, and publish. Built to make an author's work and life easier." },
     body: (L, h) => `
 <section class="hero wrap">
   <div>
-    <p class="eyebrow">${h.t("Yazarlar için sade yazma stüdyosu", "A calm writing studio for authors")}</p>
-    <h1>${h.t("Yazmak için <em>sade bir stüdyo.</em>", "A <em>calm studio</em> to write in.")}</h1>
+    <p class="eyebrow">${h.t("Yazar-yayıncının evi", "A home for author-publishers")}</p>
+    <h1>${h.t("Yaz. Düzenle. <em>Yayınla.</em>", "Write. Edit. <em>Publish.</em>")}</h1>
     <p class="lede">${h.t(
-      "Publishify; romanını, öykünü, denemeni ya da makaleni yazman, kendi Google Drive'ında saklaman ve tek tıkla yayınlaman için tasarlanmış bir yazma editörüdür. Tarayıcıda çalışır, her cihazda aynıdır.",
-      "Publishify is a writing editor made for drafting your novel, story, essay or article, keeping it in your own Google Drive and publishing it in one click. It runs in the browser and feels the same on every device.")}</p>
-    <p class="cta"><a class="btn primary" href="/studio/">${h.t("Studio'yu aç — ücretsiz", "Open Studio — it's free")}</a><a class="btn ghost" href="${h.href("features")}">${h.t("Özellikleri gör", "See the features")}</a></p>
+      "Publishify, satılacak bir ürün olsun diye değil, yazara iyi bir deneyim sunmak için var. Özellikle kendi kitabını yayınlayan yazarların işini ve hayatını kolaylaştıracak ne varsa eklemeye çalışıyoruz.",
+      "Publishify exists not to be one more product, but to give writers a genuinely good experience. Above all for authors who publish their own books, we keep adding whatever makes their work and their lives easier.")}</p>
+    <p class="cta"><a class="btn primary" href="/studio/">${h.t("Yazmaya başla — ücretsiz", "Start writing — it's free")}</a><a class="btn ghost" href="${h.href("masthead")}">${h.t("Yayın kurulunu gör", "Meet the editorial board")}</a></p>
     <ul class="ticks"><li>${h.t("Hesap gerekmez", "No account needed")}</li><li>${h.t("Dosyaların Drive'ında, kimseyle paylaşılmaz", "Your files live in your Drive, shared with no one")}</li><li>${h.t("Word, PDF, ePUB, MD: istediğin biçimde indir", "Download as Word, PDF, ePUB or Markdown")}</li></ul>
   </div>
   <div class="stage" aria-hidden="false">
@@ -113,35 +113,42 @@ export const pages = [
 <section class="s alt" aria-labelledby="brief"><div class="wrap">
   <div class="head"><h2 id="brief">${h.t("Kısaca Publishify", "Publishify in brief")}</h2></div>
   <dl class="ans">
-    <div><dt>${h.t("Nedir?", "What is it?")}</dt><dd>${h.t("Bağımsız yazarlar için tarayıcıda çalışan bir yazma editörü ve yayın stüdyosu.", "A browser-based writing editor and publishing studio for independent authors.")}</dd></div>
+    <div><dt>${h.t("Nedir?", "What is it?")}</dt><dd>${h.t("Kendi kitabını yayınlayan yazarlar için yazma, editörlük ve yayın deneyimi. Editör tarayıcıda çalışır.", "A writing, editing and publishing experience for authors who publish their own books. The editor runs in the browser.")}</dd></div>
     <div><dt>${h.t("Kimler için?", "Who is it for?")}</dt><dd>${h.t("Roman, novella, hikâye, küçürek öykü, şiir, deneme, kurgu dışı ve akademik makale yazanlar için.", "Anyone writing novels, novellas, short stories, flash fiction, poetry, essays, non-fiction or academic articles.")}</dd></div>
     <div><dt>${h.t("Ne kadar?", "What does it cost?")}</dt><dd>${h.t("Editör ücretsiz; hesap açmadan başlarsın.", "The editor is free; you can start without an account.")}</dd></div>
     <div><dt>${h.t("Nerede çalışır?", "Where does it run?")}</dt><dd>${h.t("Tarayıcısı olan her cihazda: Mac, Windows, Linux, Chromebook, telefon, tablet.", "On any device with a browser: Mac, Windows, Linux, Chromebook, phone, tablet.")}</dd></div>
     <div><dt>${h.t("Hangi dillerde?", "Which languages?")}</dt><dd>${h.t("Arapça, Osmanlıca, Türkçe, İngilizce, Almanca, Fransızca, Rusça, Japonca (+ Kurmancî, Zazaca); sağdan sola dahil, arayüz de aynı dillerde.", "Arabic, Ottoman Turkish, Turkish, English, German, French, Russian, Japanese (+ Kurmanji, Zazaki); right-to-left included, and the interface speaks them too.")}</dd></div>
+    <div><dt>${h.t("Yazdıklarım nerede durur?", "Where does my writing live?")}</dt><dd>${h.t("Önce kendi cihazında. İstersen hesabınla eşitlersin ya da kendi Drive'ında tutarsın.", "On your own device first. If you like, sync it with an account or keep it in your own Drive.")}</dd></div>
   </dl>
 </div></section>
 
 <section class="s" aria-labelledby="flow"><div class="wrap">
-  <div class="head"><h2 id="flow">${h.t("Yaz. Sakla. Yayınla.", "Write. Keep. Publish.")}</h2><p>${h.t("Bir yazarın ihtiyacı olan üç şey, tek yerde ve sade.", "The three things an author needs, in one calm place.")}</p></div>
-  <div class="grid">
-    <div class="card"><span class="ic">01</span><h3>${h.t("Yaz", "Write")}</h3><p>${h.t("Canlı Markdown, kısım › bölüm › sahne yapısı, odak ve daktilo modu, sesle yazma, sürüm geçmişi.", "Live Markdown, part › chapter › scene structure, focus and typewriter mode, dictation and version history.")}</p></div>
-    <div class="card"><span class="ic">02</span><h3>${h.t("Sakla", "Keep")}</h3><p>${h.t("Önce cihazında; hesap açarsan eşitlenir; Google Drive bağlantısıyla (erken erişim) kendi Drive'ında düz Markdown dosyaları olarak.", "On your device first; synced if you create an account; and, with the Google Drive connection (early access), as plain Markdown files in your own Drive.")}</p></div>
-    <div class="card"><span class="ic">03</span><h3>${h.t("Yayınla", "Publish")}</h3><p>${h.t("Bir tıkla herkese açık, hızlı, arama motorlarına hazır bir sayfa. Paylaşma bağlantıları dahil. Taslağın sende kalır.", "One click to a public, fast, search-ready page with sharing links built in. Your draft stays with you.")}</p></div>
+  <div class="head"><h2 id="flow">${h.t("Kitabının yolculuğu, tek evde.", "Your book's journey, under one roof.")}</h2><p>${h.t("Yazar-yayıncının işi üç adımda.", "An author-publisher's work, in three steps.")}</p></div>
+  <div class="grid g3">
+    <div class="card"><span class="ic">01</span><h3>${h.t("Yaz", "Write")}</h3><p>${h.t("Studio'da canlı Markdown, kısım › bölüm › sahne yapısı, sesle yazma ve sürüm geçmişi. Ücretsiz, hesap gerekmez.", "In Studio: live Markdown, part › chapter › scene structure, dictation and version history. Free, with no account needed.")}</p><p style="margin-top:12px"><a href="${h.href("features")}">${h.t("Yazmak için →", "Writing →")}</a></p></div>
+    <div class="card"><span class="ic">02</span><h3>${h.t("Düzenle", "Edit")}</h3><p>${h.t("Masthead yayın kurulu kitabını okur; kanıta dayalı notlar verir, metnine dokunmaz. Erken erişimde.", "The Masthead editorial board reads your book and gives evidence-based notes without touching your text. In early access.")}</p><p style="margin-top:12px"><a href="${h.href("masthead")}">${h.t("Düzenlemek için →", "Editing →")}</a></p></div>
+    <div class="card"><span class="ic">03</span><h3>${h.t("Yayınla", "Publish")}</h3><p>${h.t("Word, PDF, ePUB ya da tek tıkla herkese açık, arama motorlarına hazır bir sayfa. Taslağın sende kalır.", "Word, PDF, ePUB, or one click to a public page ready for search engines. Your draft stays with you.")}</p><p style="margin-top:12px"><a href="${h.href("publishing")}">${h.t("Yayınlamak için →", "Publishing →")}</a></p></div>
+  </div>
+  <p class="note" style="margin-top:28px">${h.t("Studio'dan Word olarak indirdiğin kitabı Masthead'e okutabilirsin; başka bir yerde yazdıysan da okur. İkisini tek düğmeyle buluşturmak yolda.", "You can download your book from Studio as Word and have Masthead read it; it reads books written elsewhere too. Bringing the two together in one click is on the way.")}</p>
+</div></section>
+
+<section class="s alt" aria-labelledby="why"><div class="wrap">
+  <div class="head"><p class="eyebrow">${h.t("Neden varız", "Why we are here")}</p><h2 id="why">${h.t("Ürün değil, yazara iyi gelen bir deneyim.", "Not a product. An experience that is good to writers.")}</h2><p>${h.t("Yeni bir özelliği eklerken tek bir soru soruyoruz: Bu, kendi kitabını yayınlayan bir yazarın omzundan bir işi alıyor mu?", "Before adding anything, we ask one question: does this take a job off the shoulders of an author publishing their own book?")}</p></div>
+  <div class="grid g3">
+    <div class="card"><h3>${h.t("Kitabın sende kalır", "Your book stays yours")}</h3><p>${h.t("Dosyaların sende ya da kendi Drive'ında durur; eşitlemeyi sen seçersin. İstediğin an indirip götürürsün.", "Your files stay with you or in your own Drive, and syncing is your choice. Take them with you whenever you like.")}</p></div>
+    <div class="card"><h3>${h.t("Karar senindir", "The decisions are yours")}</h3><p>${h.t("Yapay zekâ önerir, yeniden yazmaz ve hüküm vermez. Metnini yalnızca sen değiştirirsin.", "AI suggests. It does not rewrite or pass verdicts. Only you change your text.")}</p></div>
+    <div class="card"><h3>${h.t("Ses yazarındır", "The voice is the author's")}</h3><p>${h.t("Araçlar geri çekilir; sayfada kalan senin dilin ve senin sesindir.", "The tools step back. What stays on the page is your language and your voice.")}</p></div>
   </div>
 </div></section>
 
 <section class="s" aria-labelledby="board"><div class="wrap">
   <div class="head">
-    <p class="eyebrow">${h.t("Editör kurulu · Yakında", "Editorial board · Coming soon")}</p>
-    <h2 id="board">${h.t("Arkanda koca bir yayınevi kadrosu.", "A whole publishing house behind you.")}</h2>
-    <p>${h.t("Tek başına yazarsın ama yalnız değilsin. Roman, öykü, şiir, deneme ve akademik metin için ayrı ayrı uzmanlaşmış bir editör kurulu kitabını okur, haritalar ve sana yol gösterir.", "You write alone, but you are not on your own. An editorial board, with specialists for novels, stories, poetry, essays and academic writing, reads your book, maps it and guides you.")}</p>
+    <p class="eyebrow">${h.t("Düzenle · Erken erişim", "Edit · Early access")}</p>
+    <h2 id="board">${h.t("Arkanda bir yayınevi kadrosu.", "A publishing house behind you.")}</h2>
+    <p>${h.t("Tek başına yazarsın ama yalnız değilsin. Masthead kitabını okur, nerede durduğunu Yolcunun Yedi Merhalesi'nde gösterir.", "You write alone, but you are not on your own. Masthead reads your book and shows where it stands in The Wayfarer's Seven Stages.")}</p>
   </div>
-  <div class="grid g3">
-    <div class="card"><h3>${h.t("Editörler", "Editors")}</h3><p>${h.t("Kurgu, edebiyat, akademik, şiir, kurgu dışı, çocuk ve gençlik editörleri; her tür kendi ölçütüyle okunur.", "Fiction, literary, academic, poetry, non-fiction and children's editors; every genre is read by its own standards.")}</p></div>
-    <div class="card"><h3>${h.t("Okur paneli", "Reader panel")}</h3><p>${h.t("Metnini farklı okurların gözüyle ön okumadan geçirir: nerede sıkıldılar, nerede etkilendiler?", "A first read through the eyes of different readers: where did they get bored, where were they moved?")}</p></div>
-    <div class="card"><h3>${h.t("Denetçiler", "Checkers")}</h3><p>${h.t("Tutarlılık, kaynak, dil ve yazım, hassasiyet: kitabın dosyası temiz ve sağlam çıksın.", "Consistency, sources, language and spelling, sensitivity: so your book goes out clean and solid.")}</p></div>
-  </div>
-  <p class="note" style="margin-top:28px">${h.t("Kurulun bir bölümü ücretsiz olacak; derin değerlendirmeler ücretli. Yazma editörü her zaman ücretsiz kalır.", "Part of the board will be free; deeper evaluations will be paid. The writing editor stays free.")}</p>
+  <figure style="margin:0 0 28px"><img src="/img/masthead-night-press-${L}.svg" width="680" height="580" loading="lazy" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto" alt="${h.t("Gece yayınevi: yedi merhaleli halkanın altında çalışan yapay zekâ editörleri ve betikler. Örnek veridir.", "The night press: AI editors and scripts at work beneath a ring of seven stages. Sample data.")}"></figure>
+  <p class="cta" style="justify-content:center"><a class="btn ghost" href="${h.href("masthead")}">${h.t("Masthead'i incele", "Explore Masthead")}</a></p>
 </div></section>
 
 <section class="s alt" aria-labelledby="feat"><div class="wrap">
@@ -210,7 +217,7 @@ export const pages = [
 <section class="s alt" aria-labelledby="soon"><div class="wrap">
   <div class="head"><h2 id="soon">${h.t("Yolda olanlar", "On the way")}</h2><p>${h.t("Henüz hazır olmayanları açıkça söylüyoruz.", "We say plainly what is not ready yet.")}</p></div>
   <div class="grid">
-    <div class="card"><h3>${h.t("Editör kurulu", "Editorial board")}</h3><p>${h.t("Kitabını okuyan, yapısını haritalayan, bir yayınevi kadrosu kadar geniş bir editör kurulu geliştiriyoruz. Bir kısmı ücretsiz olacak, geri kalanı ücretli.", "We are building an editorial board as broad as a publishing house's staff that reads your book and maps its structure. Part of it will be free, the rest paid.")}</p></div>
+    <div class="card"><h3>${h.t("Studio içinde Masthead", "Masthead inside Studio")}</h3><p>${h.t("Kitabını Studio'dan çıkmadan, tek düğmeyle yayın kuruluna okutmak için çalışıyoruz.", "We are working on letting you send your book to the editorial board with one click, without leaving Studio.")}</p></div>
     <div class="card"><h3>${h.t("Masaüstü ve mobil uygulamalar", "Desktop and mobile apps")}</h3><p>${h.t("Mac, Windows, iPhone ve Android için uygulamalar planlanıyor; bunlar da aynı kitap biçimini kullanacak.", "Apps for Mac, Windows, iPhone and Android are planned and will use the same book format.")}</p></div>
     <div class="card"><h3>${h.t("Çevrimdışı kullanım", "Offline use")}</h3><p>${h.t("Sayfa bir kez açıldıktan sonra internetsiz de açılabilmesi için çalışıyoruz.", "We are working on letting the page open without a connection after the first visit.")}</p></div>
   </div>
@@ -235,7 +242,7 @@ export const pages = [
     desc: { tr: "Publishify'ın özellikleri: canlı Markdown, kısım › bölüm › sahne, hazır şablonlar, odak modu, sesle yazma, sürüm geçmişi, kapak, dışa aktarma ve temalar.", en: "Publishify features: live Markdown, part › chapter › scene, templates, focus mode, dictation, version history, covers, export and themes." },
     body: (L, h) => `
 <div class="wrap">${h.crumbs([["home"], ["features"]])}
-<header class="page-head"><h1>${h.t("Özellikler", "Features")}</h1><p class="lede">${h.t("Publishify yazmaya odaklanır: gösterişli menüler yerine az ve iyi düşünülmüş araçlar.", "Publishify focuses on writing: a few well-considered tools instead of a wall of menus.")}</p></header>
+<header class="page-head"><p class="eyebrow">Studio</p><h1>${h.t("Yazmak için", "For writing")}</h1><p class="lede">${h.t("Publishify yazmaya odaklanır: gösterişli menüler yerine az ve iyi düşünülmüş araçlar.", "Publishify focuses on writing: a few well-considered tools instead of a wall of menus.")}</p></header>
 <div class="prose">${FEATURES.map((f) => `<h2 id="${f.id}">${f.title[L]}</h2><p>${f.text[L]}</p>`).join("")}
 <h2 id="accounts">${h.t("Hesap ve eşitleme", "Accounts and sync")}</h2>
 <p>${h.t("Hesap açmak şifresizdir: cihazının passkey'ini (parmak izi, yüz tanıma ya da PIN) kullanırsın. Hesabın kurtarma koduyla korunur. Hesap açınca kitapların bölüm bölüm cihazların arasında eşitlenir; aynı bölüm iki yerde değişirse sunucudaki sürüm kalır, diğeri yeni bir “çakışan kopya” bölümü olur. Hiçbir metin sessizce ezilmez.", "Creating an account is passwordless: you use your device's passkey (fingerprint, face or PIN), and a recovery code protects the account. Once you have an account your books sync chapter by chapter between devices; if the same chapter changes in two places the server version stays and the other becomes a new “conflict copy” chapter. Nothing is silently overwritten.")}</p>
