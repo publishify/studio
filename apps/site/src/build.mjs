@@ -25,7 +25,7 @@ const dict = {
   en: { nav: "Main navigation", menu: "Menu", skip: "Skip to content", studio: "Start writing", switchTo: "TR", crumbs: "Breadcrumb", product: "For authors", help: "Help", language: "Language", rights: "A home for author-publishers.", openStudio: "Open Studio", llms: "Summary for AI" },
 };
 const navIds = ["features", "masthead", "publishing", "faq"];
-const navLabel = { features: { tr: "Yaz", en: "Write" }, masthead: { tr: "Düzenle", en: "Edit" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
+const navLabel = { features: { tr: "Studio", en: "Studio" }, masthead: { tr: "Masthead", en: "Masthead" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
 
 function helpers(L, page) {
   const t = (tr, en) => (L === "tr" ? tr : en);
