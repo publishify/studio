@@ -24,7 +24,7 @@ const dict = {
   tr: { nav: "Ana gezinme", menu: "Menü", skip: "İçeriğe geç", studio: "Yazmaya başla", switchTo: "EN", crumbs: "Sayfa yolu", product: "Yazar için", help: "Yardım", language: "Dil", rights: "Yazar-yayıncının evi.", openStudio: "Studio'yu aç", llms: "Yapay zekâ için özet" },
   en: { nav: "Main navigation", menu: "Menu", skip: "Skip to content", studio: "Start writing", switchTo: "TR", crumbs: "Breadcrumb", product: "For authors", help: "Help", language: "Language", rights: "A home for author-publishers.", openStudio: "Open Studio", llms: "Summary for AI" },
 };
-const navIds = ["features", "masthead", "publishing", "faq"];
+const navIds = ["features", "masthead", "compare", "faq"];
 const navLabel = { features: { tr: "Studio", en: "Studio" }, masthead: { tr: "Masthead", en: "Masthead" }, languages: { tr: "Diller", en: "Languages" }, publishing: { tr: "Yayınla", en: "Publish" }, compare: { tr: "Karşılaştırma", en: "Compare" }, faq: { tr: "SSS", en: "FAQ" }, home: { tr: "Ana sayfa", en: "Home" } };
 
 function helpers(L, page) {
