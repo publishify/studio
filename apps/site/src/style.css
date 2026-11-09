@@ -174,3 +174,12 @@ details.menu nav{background:#0f1611}
 .shot figcaption{color:var(--muted)}
 @media (max-width:979px){.tilt.front{transform:rotateY(-6deg) rotateX(3deg)}.tilt.back{display:none}.stage{min-height:0}.float.f2{top:-4%}}
 @media (prefers-reduced-motion:reduce){.tilt.front{animation:none}.card{transition:none}}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.grid.three{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.grid.three{grid-template-columns:minmax(0,1fr)}}
+.stages{list-style:none;margin:1.2rem 0;padding:0;max-width:46rem}
+.stages li{display:grid;grid-template-columns:3.4rem minmax(0,1fr);gap:8px;padding:1.3rem 0;border-top:1px solid var(--line)}
+.stages .n{font:600 1.5rem/1.2 var(--sans);color:var(--green)}
+.stages h3{margin:0 0 .25em}
+.stages .q{margin:0 0 .5em;color:var(--green)}
+.stages li div>p:last-child{margin:0;color:var(--muted)}
