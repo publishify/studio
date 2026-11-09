@@ -123,7 +123,10 @@ for (const p of pages) for (const L of LANG_KEYS) {
 // Addresses from before English moved to the root keep working.
 write("_redirects", pages.flatMap((p) => {
   const moved = [[p.slug.tr.replace(/^\/tr/, ""), p.slug.tr], [`/en${p.slug.en}`, p.slug.en]];
-  return moved.filter(([from]) => from !== "/").map(([from, to]) => `${from} ${to} 301`);
+  // An old Turkish address can equal a current English one; that one must stay.
+  return moved
+    .filter(([from]) => !pages.some((q) => q.slug.en === from || q.slug.tr === from))
+    .map(([from, to]) => `${from} ${to} 301`);
 }).join("\n") + "\n");
 copyDir(path.join(root, "public"), OUT);
 
