@@ -1,5 +1,5 @@
 // Development only (?demo): loads a sample book for the marketing-site screenshots. Not part of the production build.
-// Example: /studio/?demo=1&theme=light&book=tr   (book: tr | en | ar)
+// Example: /studio/?demo=1&theme=light&book=tr   (book: tr | ar)
 import { useStore } from "../store";
 import type { Item } from "../store";
 
@@ -18,16 +18,6 @@ const tr = () => {
   ];
   return { items, active: open.id, title: "Tuz ve Deniz", author: "Yazar Adı", lang: undefined as string | undefined };
 };
-const en = () => {
-  const open = ch((q.get("zen") ? "" : "# The Harbor\n\n") + "River reached the harbor before the fog had lifted. Her suitcase was small; it held only a notebook, a pen and an old cassette with *her mother's voice* on it.\n\n> “The sea is the language of those who cannot speak,” her father used to say.\n\nRiver had never understood that. Not until **that evening**, at the end of the pier, when the smell of salt threw open every door of her childhood at once.\n\n- The first page of the notebook was empty.\n- On the second she wrote a single sentence.\n\nA cassette player would be hard to find; but writing, she thought, was still in her hands.");
-  const items: Item[] = [
-    part("I. The Shore"), open,
-    ch("Morning, before the fog", { level: 2 }), ch("At the end of the pier", { level: 2 }),
-    ch("# The Cassette"), ch("The repair shop", { level: 2 }),
-    part("II. Open Water"), ch("# The Storm"), ch("# The Return"),
-  ];
-  return { items, active: open.id, title: "Salt and Sea", author: "Author Name", lang: undefined as string | undefined };
-};
 const ar = () => {
   const open = ch("# الفصل الأول\n\nفي صباحٍ باكر، وصلت نهى إلى الميناء قبل أن ينقشع الضباب. كانت حقيبتها صغيرة، لا يحمل داخلها سوى دفترٍ وقلمٍ وشريطٍ قديمٍ يحفظ صوت أمها.\n\n> «البحر لغة من لا يُجيدون الكلام»، كان أبوها يقول.\n\nلم تفهم نهى ذلك يومًا، حتى **تلك الليلة**، عند طرف الرصيف، حين فتحت رائحة الملح أبواب طفولتها كلها دفعةً واحدة.");
   const items: Item[] = [part("القسم الأول"), open, ch("# الشريط"), ch("# العودة")];
@@ -36,7 +26,7 @@ const ar = () => {
 
 const seed = () => {
   const s = useStore.getState();
-  const d = q.get("book") === "ar" ? ar() : q.get("book") === "en" ? en() : tr();
+  const d = q.get("book") === "ar" ? ar() : tr();
   const id = uid();
   useStore.setState({ ready: true });
   s.patch(() => ({

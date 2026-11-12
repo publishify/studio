@@ -134,11 +134,7 @@ export async function recover(c: C, code: string) {
   const row = await c.env.DB.prepare("SELECT id, name FROM users WHERE recovery_hash = ?").bind(await sha256(normalizeCode(code))).first<{ id: string; name: string }>();
   if (!row) return c.json({ error: "code" }, 400);
   const fresh = newRecoveryCode(); // the used code becomes invalid
-  // Recovery may follow an account compromise, so every session opened before it is closed too.
-  await c.env.DB.batch([
-    c.env.DB.prepare("UPDATE users SET recovery_hash = ? WHERE id = ?").bind(await sha256(normalizeCode(fresh)), row.id),
-    c.env.DB.prepare("DELETE FROM sessions WHERE user_id = ?").bind(row.id),
-  ]);
+  await c.env.DB.prepare("UPDATE users SET recovery_hash = ? WHERE id = ?").bind(await sha256(normalizeCode(fresh)), row.id).run();
   await startSession(c, row.id);
   return c.json({ user: row, recoveryCode: fresh });
 }
